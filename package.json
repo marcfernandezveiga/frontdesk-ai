@@ -9,6 +9,12 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@ai-sdk/openai": "^3.0.70",
+    "@auth0/nextjs-auth0": "^4.22.0",
+    "@elevenlabs/react": "^1.6.7",
+    "@supabase/ssr": "^0.12.0",
+    "@supabase/supabase-js": "^2.108.1",
+    "ai": "^6.0.202",
     "next": "16.2.9",
     "react": "19.2.4",
     "react-dom": "19.2.4"
