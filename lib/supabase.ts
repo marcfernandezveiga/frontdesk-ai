@@ -1,7 +1,7 @@
 import { createClient } from "@supabase/supabase-js";
 import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
-import type { Slot, Appointment, CallLog } from "./types";
+import type { Slot, Appointment, CallLog, LiveCall } from "./types";
 
 // ---------------------------------------------------------------------------
 // Database generic: one place to add table typings
@@ -32,6 +32,16 @@ export type Database = {
           created_at?: string;
         };
         Update: Partial<CallLog>;
+        Relationships: [];
+      };
+      live_calls: {
+        Row: LiveCall;
+        Insert: Omit<LiveCall, "id" | "started_at" | "updated_at"> & {
+          id?: string;
+          started_at?: string;
+          updated_at?: string;
+        };
+        Update: Partial<LiveCall>;
         Relationships: [];
       };
     };

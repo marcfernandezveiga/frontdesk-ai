@@ -12,7 +12,7 @@ import { useParams } from "next/navigation";
 import { DashboardPage } from "@/components/dashboard/DashboardPage";
 import { themeToCssVars } from "@/lib/tenant";
 import type { TenantConfig } from "@/lib/tenant";
-import type { Appointment, CallLog } from "@/lib/types";
+import type { Appointment, CallLog, LiveCall } from "@/lib/types";
 import type { AvailabilitySlot } from "@/components/dashboard/DashboardTypes";
 import type { DashboardPayload } from "@/app/api/dashboard/route";
 
@@ -75,6 +75,8 @@ export default function TenantDashboardPage() {
 
   const appointments: Appointment[] = data?.appointments ?? [];
   const callLogs: CallLog[] = data?.callLogs ?? [];
+  const liveCalls: LiveCall[] = data?.liveCalls ?? [];
+  const activeCallCount = liveCalls.filter((c) => c.status === "ringing" || c.status === "live").length;
 
   const businessName = tenant?.name ?? slug ?? "Dashboard";
 
@@ -85,11 +87,12 @@ export default function TenantDashboardPage() {
       <DashboardPage
         header={{
           clinicName: businessName,
-          hasActiveCall: false,
-          activeCallCount: 0,
+          hasActiveCall: activeCallCount > 0,
+          activeCallCount,
         }}
         appointments={appointments}
         callLogs={callLogs}
+        liveCalls={liveCalls}
         availabilitySlots={availabilitySlots}
         selectedAppointmentId={selectedAppointmentId}
         onSelectAppointment={setSelectedAppointmentId}

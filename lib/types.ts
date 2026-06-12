@@ -37,6 +37,22 @@ export interface CallLog {
   created_at: string;
 }
 
+export type LiveCallStatus = "ringing" | "live" | "booked" | "ended";
+
+export interface LiveCall {
+  id: string;
+  business_id: string;
+  caller_name: string | null;
+  caller_phone: string | null;
+  status: LiveCallStatus;
+  transcript: string;
+  current_speaker: "caller" | "agent" | null;
+  appointment_id: string | null;
+  started_at: string;
+  updated_at: string;
+  ended_at: string | null;
+}
+
 // ---- ElevenLabs client-tool payloads (browser → our API, same-origin) ----
 
 export interface CheckAvailabilityArgs {

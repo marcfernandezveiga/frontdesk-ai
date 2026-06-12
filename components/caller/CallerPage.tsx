@@ -100,6 +100,7 @@ export function CallerPage({
             <CallerIdle
               clinicName={tenant?.name ?? "Frontdesk"}
               tagline={tenant?.tagline}
+              tenant={tenant}
               onStartCall={onStartCall}
             />
           )}

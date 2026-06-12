@@ -5,7 +5,7 @@
  * polled Supabase queries (GET /api/availability, direct Supabase reads).
  */
 
-import type { Appointment, CallLog, Slot } from "@/lib/types";
+import type { Appointment, CallLog, LiveCall, Slot } from "@/lib/types";
 
 // ─── Availability strip ──────────────────────────────────────────────────────
 
@@ -46,6 +46,7 @@ export interface AppointmentCardProps {
 
 export interface TranscriptPanelProps {
   callLog: CallLog | null;
+  liveCall?: LiveCall | null;
   /**
    * Loading state while fetching transcript for a selected appointment.
    */
@@ -72,6 +73,7 @@ export interface DashboardPageProps {
   header: DashboardHeaderProps;
   appointments: Appointment[];
   callLogs: CallLog[];
+  liveCalls: LiveCall[];
   availabilitySlots: AvailabilitySlot[];
   /**
    * ID of the currently selected appointment in the transcript panel.

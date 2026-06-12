@@ -14,7 +14,7 @@
 
 import { useCallback, useEffect, useState } from "react";
 import { DashboardPage } from "@/components/dashboard/DashboardPage";
-import type { Appointment, CallLog } from "@/lib/types";
+import type { Appointment, CallLog, LiveCall } from "@/lib/types";
 import type { AvailabilitySlot } from "@/components/dashboard/DashboardTypes";
 import type { DashboardPayload } from "@/app/api/dashboard/route";
 
@@ -57,16 +57,19 @@ export default function DashboardPageRoute() {
 
   const appointments: Appointment[] = data?.appointments ?? [];
   const callLogs: CallLog[] = data?.callLogs ?? [];
+  const liveCalls: LiveCall[] = data?.liveCalls ?? [];
+  const activeCallCount = liveCalls.filter((c) => c.status === "ringing" || c.status === "live").length;
 
   return (
     <DashboardPage
       header={{
         clinicName: "Marina Physio",
-        hasActiveCall: false,
-        activeCallCount: 0,
+        hasActiveCall: activeCallCount > 0,
+        activeCallCount,
       }}
       appointments={appointments}
       callLogs={callLogs}
+      liveCalls={liveCalls}
       availabilitySlots={availabilitySlots}
       selectedAppointmentId={selectedAppointmentId}
       onSelectAppointment={setSelectedAppointmentId}

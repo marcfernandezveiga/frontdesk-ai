@@ -67,10 +67,30 @@ function CallerInner({ tenant }: { tenant: TenantConfig }) {
 
   const transcriptRef = useRef<string[]>([]);
   const appointmentIdRef = useRef<string | undefined>(undefined);
+  const liveCallIdRef = useRef<string | undefined>(undefined);
+
+  const postLiveCall = useCallback(
+    (payload: Record<string, unknown>) => {
+      fetch(`/api/live-call?business=${encodeURIComponent(slug)}`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      }).catch((err) => console.warn("[live-call] Failed to post event:", err));
+    },
+    [slug]
+  );
 
   const conversation = useConversation({
     onConnect: () => {
       setCallState("live");
+      if (liveCallIdRef.current) {
+        postLiveCall({
+          event: "update",
+          call_id: liveCallIdRef.current,
+          transcript: transcriptRef.current.join("\n\n"),
+          current_speaker: "caller",
+        });
+      }
     },
     onDisconnect: () => {
       setCallState((prev) => (prev === "confirmed" ? "confirmed" : "ended"));
@@ -93,6 +113,14 @@ function CallerInner({ tenant }: { tenant: TenantConfig }) {
         transcriptRef.current.push(`[${role}] ${event.message}`);
         if (role === "Agent") {
           setLiveCaption(event.message);
+        }
+        if (liveCallIdRef.current) {
+          postLiveCall({
+            event: "update",
+            call_id: liveCallIdRef.current,
+            transcript: transcriptRef.current.join("\n\n"),
+            current_speaker: role === "Caller" ? "caller" : "agent",
+          });
         }
       }
     },
@@ -126,6 +154,15 @@ function CallerInner({ tenant }: { tenant: TenantConfig }) {
             startsAt: data.starts_at ?? new Date().toISOString(),
             duration: tenant.slotDurationMin,
           });
+          if (liveCallIdRef.current) {
+            postLiveCall({
+              event: "booked",
+              call_id: liveCallIdRef.current,
+              caller_name,
+              transcript: transcriptRef.current.join("\n\n"),
+              appointment_id: data.appointment_id,
+            });
+          }
           setCallState("confirmed");
         }
 
@@ -148,6 +185,14 @@ function CallerInner({ tenant }: { tenant: TenantConfig }) {
   useEffect(() => {
     if (callState !== "ended" && callState !== "confirmed") return;
     const transcript = transcriptRef.current.join("\n\n");
+    if (liveCallIdRef.current) {
+      postLiveCall({
+        event: callState === "confirmed" ? "booked" : "end",
+        call_id: liveCallIdRef.current,
+        transcript,
+        appointment_id: appointmentIdRef.current ?? null,
+      });
+    }
     if (!transcript) return;
     fetch(`/api/call-log?business=${encodeURIComponent(slug)}`, {
       method: "POST",
@@ -157,7 +202,7 @@ function CallerInner({ tenant }: { tenant: TenantConfig }) {
         appointment_id: appointmentIdRef.current ?? null,
       }),
     }).catch((err) => console.warn("[call-log] Failed to post transcript:", err));
-  }, [callState, slug]);
+  }, [callState, slug, postLiveCall]);
 
   const handleStartCall = useCallback(async () => {
     setCallState("connecting");
@@ -167,6 +212,24 @@ function CallerInner({ tenant }: { tenant: TenantConfig }) {
     setAppointment(undefined);
     transcriptRef.current = [];
     appointmentIdRef.current = undefined;
+    liveCallIdRef.current = undefined;
+
+    try {
+      const liveCallRes = await fetch(`/api/live-call?business=${encodeURIComponent(slug)}`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          event: "start",
+          caller_phone: "+44 20 7946 0148",
+        }),
+      });
+      if (liveCallRes.ok) {
+        const data = (await liveCallRes.json()) as { id?: string };
+        liveCallIdRef.current = data.id;
+      }
+    } catch {
+      // Non-fatal: the voice call can continue without dashboard live state.
+    }
 
     const overrides = {
       agent: {
@@ -197,10 +260,26 @@ function CallerInner({ tenant }: { tenant: TenantConfig }) {
 
   const handleEndCall = useCallback(() => {
     conversation.endSession();
+    if (liveCallIdRef.current) {
+      postLiveCall({
+        event: "end",
+        call_id: liveCallIdRef.current,
+        transcript: transcriptRef.current.join("\n\n"),
+        appointment_id: appointmentIdRef.current ?? null,
+      });
+    }
   }, [conversation]);
 
   const handleReset = useCallback(() => {
     conversation.endSession();
+    if (liveCallIdRef.current) {
+      postLiveCall({
+        event: "end",
+        call_id: liveCallIdRef.current,
+        transcript: transcriptRef.current.join("\n\n"),
+        appointment_id: appointmentIdRef.current ?? null,
+      });
+    }
     setCallState("idle");
     setLiveCaption(undefined);
     setErrorMessage(undefined);
@@ -208,7 +287,8 @@ function CallerInner({ tenant }: { tenant: TenantConfig }) {
     setAppointment(undefined);
     transcriptRef.current = [];
     appointmentIdRef.current = undefined;
-  }, [conversation]);
+    liveCallIdRef.current = undefined;
+  }, [conversation, postLiveCall]);
 
   return (
     <CallerPage

@@ -15,7 +15,7 @@
  */
 
 import { BUSINESS_ID } from "@/lib/types";
-import type { Appointment, CallLog, Slot } from "@/lib/types";
+import type { Appointment, CallLog, LiveCall, Slot } from "@/lib/types";
 import { hasSupabaseEnv, createServiceClient } from "@/lib/supabase";
 import { NextRequest } from "next/server";
 
@@ -29,6 +29,7 @@ export interface AvailabilitySlotDTO {
 export interface DashboardPayload {
   appointments: Appointment[];
   callLogs: CallLog[];
+  liveCalls: LiveCall[];
   slots: AvailabilitySlotDTO[];
 }
 
@@ -152,6 +153,7 @@ export async function GET(request: NextRequest) {
     const payload: DashboardPayload = {
       appointments: MOCK_APPOINTMENTS,
       callLogs: MOCK_CALL_LOGS,
+      liveCalls: [],
       slots: MOCK_SLOTS,
     };
     return Response.json(payload, {
@@ -163,7 +165,7 @@ export async function GET(request: NextRequest) {
     const supabase = createServiceClient();
     const now = new Date().toISOString();
 
-    const [appointmentsRes, callLogsRes, slotsRes] = await Promise.all([
+    const [appointmentsRes, callLogsRes, liveCallsRes, slotsRes] = await Promise.all([
       supabase
         .from("appointments")
         .select("*")
@@ -177,6 +179,13 @@ export async function GET(request: NextRequest) {
         .order("created_at", { ascending: false })
         .limit(50),
       supabase
+        .from("live_calls")
+        .select("*")
+        .eq("business_id", businessId)
+        .in("status", ["ringing", "live", "booked"])
+        .order("updated_at", { ascending: false })
+        .limit(10),
+      supabase
         .from("slots")
         .select("*")
         .eq("business_id", businessId)
@@ -188,6 +197,7 @@ export async function GET(request: NextRequest) {
 
     const appointments = (appointmentsRes.data ?? []) as Appointment[];
     const callLogs = (callLogsRes.data ?? []) as CallLog[];
+    const liveCalls = (liveCallsRes.data ?? []) as LiveCall[];
     const rawSlots = (slotsRes.data ?? []) as Slot[];
 
     const slots: AvailabilitySlotDTO[] = rawSlots.map((s) => ({
@@ -195,7 +205,7 @@ export async function GET(request: NextRequest) {
       label: toLabel(s.starts_at),
     }));
 
-    const payload: DashboardPayload = { appointments, callLogs, slots };
+    const payload: DashboardPayload = { appointments, callLogs, liveCalls, slots };
     return Response.json(payload, {
       headers: { "Cache-Control": "no-store" },
     });

@@ -1,9 +1,9 @@
 "use client";
 
-import { Sparkles, FileText } from "lucide-react";
+import { PhoneIncoming, Sparkles, FileText } from "lucide-react";
 import type { TranscriptPanelProps } from "./DashboardTypes";
 
-export function TranscriptPanel({ callLog, loading = false }: TranscriptPanelProps) {
+export function TranscriptPanel({ callLog, liveCall, loading = false }: TranscriptPanelProps) {
   if (loading) {
     return (
       <div className="flex flex-col gap-4 p-6" aria-busy="true" aria-label="Loading transcript">
@@ -22,7 +22,10 @@ export function TranscriptPanel({ callLog, loading = false }: TranscriptPanelPro
     );
   }
 
-  if (!callLog) {
+  const transcript = liveCall?.transcript ?? callLog?.transcript;
+  const summary = callLog?.summary;
+
+  if (!transcript && !liveCall) {
     return (
       <div className="flex flex-1 flex-col items-center justify-center gap-3 p-8 text-center">
         <div className="w-10 h-10 rounded-full bg-[oklch(94%_0.003_264)] flex items-center justify-center">
@@ -49,8 +52,44 @@ export function TranscriptPanel({ callLog, loading = false }: TranscriptPanelPro
       className="flex flex-col gap-5 p-6 h-full overflow-y-auto"
       aria-label="Call transcript"
     >
+      {/* Live call state */}
+      {liveCall && (
+        <div
+          className="flex gap-3 p-4 border rounded-[8px]"
+          style={{
+            background: "color-mix(in oklch, var(--fd-accent, oklch(48% 0.2 264)) 7%, white)",
+            borderColor: "color-mix(in oklch, var(--fd-accent, oklch(48% 0.2 264)) 24%, transparent)",
+          }}
+          role="status"
+          aria-label="Live phone call"
+        >
+          <PhoneIncoming
+            size={15}
+            style={{ color: "var(--fd-accent, oklch(48% 0.2 264))" }}
+            className="flex-shrink-0 mt-0.5"
+            aria-hidden="true"
+          />
+          <div className="flex flex-col gap-1 min-w-0">
+            <span
+              className="text-[11px] font-semibold uppercase tracking-wide"
+              style={{ color: "var(--fd-accent, oklch(48% 0.2 264))" }}
+            >
+              {liveCall.status === "ringing"
+                ? "Incoming phone call"
+                : liveCall.status === "booked"
+                  ? "Booking confirmed"
+                  : "Live phone call"}
+            </span>
+            <p className="text-sm text-[oklch(20%_0.003_264)] leading-relaxed font-medium">
+              {liveCall.caller_name ?? liveCall.caller_phone ?? "Unknown caller"}
+              {liveCall.current_speaker ? `, ${liveCall.current_speaker} speaking` : ""}
+            </p>
+          </div>
+        </div>
+      )}
+
       {/* AI Summary */}
-      {callLog.summary && (
+      {summary && (
         <div
           className="flex gap-3 p-4 bg-[oklch(48%_0.2_264_/_0.06)] border border-[oklch(48%_0.2_264_/_0.2)] rounded-[6px]"
           role="region"
@@ -66,7 +105,7 @@ export function TranscriptPanel({ callLog, loading = false }: TranscriptPanelPro
               AI Summary
             </span>
             <p className="text-sm text-[oklch(20%_0.003_264)] leading-relaxed font-medium">
-              {callLog.summary}
+              {summary}
             </p>
           </div>
         </div>
@@ -90,7 +129,7 @@ export function TranscriptPanel({ callLog, loading = false }: TranscriptPanelPro
           className="text-sm text-[oklch(20%_0.003_264)] leading-relaxed font-[var(--font-mono)] whitespace-pre-wrap break-words"
           style={{ fontFamily: "var(--font-mono)" }}
         >
-          {callLog.transcript}
+          {transcript || "Waiting for the first spoken words..."}
         </pre>
       </div>
     </div>
