@@ -189,6 +189,7 @@ export function ScheduleWeek({
   onNextWeek,
 }: ScheduleWeekProps) {
   const scrollRef = useRef<HTMLDivElement>(null);
+  const scrolledWeekRef = useRef<string | null>(null);
 
   const days = useMemo(() => weekDays(weekStart), [weekStart]);
   const weekLabel = useMemo(() => formatWeekLabel(weekStart), [weekStart]);
@@ -199,9 +200,13 @@ export function ScheduleWeek({
 
   const hasAnySlot = slots.length > 0;
 
-  // Auto-scroll: find the first slot of the day or fall back to 08:00
+  // Auto-scroll to the first slot of the day, but only ONCE per week. The
+  // dashboard refetches every 1.5s; without this guard each poll would yank the
+  // scroll position back and fight the user's own scrolling.
   useEffect(() => {
     if (loading || !scrollRef.current) return;
+    if (scrolledWeekRef.current === weekStart) return;
+    scrolledWeekRef.current = weekStart;
     let scrollTarget: number;
     if (hasAnySlot) {
       const firstSlot = positionedSlots.reduce((min, s) => (s.top < min ? s.top : min), Infinity);
@@ -210,7 +215,7 @@ export function ScheduleWeek({
       scrollTarget = timeToTop(8, 0);
     }
     scrollRef.current.scrollTop = scrollTarget;
-  }, [loading, hasAnySlot, positionedSlots]);
+  }, [loading, hasAnySlot, positionedSlots, weekStart]);
 
   // Build per-day slot lists for O(1) column rendering
   const slotsByDay = useMemo(() => {
