@@ -305,12 +305,12 @@ export function OnboardingSchedule({
           </button>
         )}
         <h2
-          className="text-2xl font-semibold tracking-[-0.02em] text-[oklch(9%_0_0)] mb-2"
+          className="text-2xl font-semibold tracking-[-0.02em] text-[oklch(7%_0_0)] mb-2"
           style={{ textWrap: "balance" } as React.CSSProperties}
         >
           Set your hours
         </h2>
-        <p className="text-sm text-[oklch(40%_0.005_264)] leading-relaxed">
+        <p className="text-sm text-[oklch(34%_0.005_264)] leading-relaxed">
           Pick a starting point below, then adjust any day. Callers can only book
           within these hours.
         </p>
@@ -435,7 +435,7 @@ export function OnboardingSchedule({
         type="button"
         onClick={onContinue}
         disabled={publishing}
-        className="inline-flex items-center justify-center gap-2.5 h-12 w-full px-6 text-sm font-medium rounded-[6px] bg-[oklch(9%_0_0)] text-white border border-[oklch(9%_0_0)] transition-all duration-150 outline-none cursor-pointer select-none hover:bg-[oklch(20%_0_0)] focus-visible:ring-2 focus-visible:ring-[oklch(48%_0.2_264)] focus-visible:ring-offset-2 disabled:opacity-40 disabled:cursor-not-allowed"
+        className="inline-flex items-center justify-center gap-2.5 h-12 w-full px-6 text-sm font-semibold rounded-[6px] bg-[oklch(9%_0_0)] text-white border border-[oklch(9%_0_0)] transition-all duration-150 outline-none cursor-pointer select-none hover:bg-[oklch(18%_0_0)] active:scale-[0.98] focus-visible:ring-2 focus-visible:ring-[oklch(48%_0.2_264)] focus-visible:ring-offset-2 disabled:opacity-40 disabled:cursor-not-allowed shadow-[0_1px_3px_oklch(0%_0_0_/_0.18)]"
       >
         {publishing ? (
           <>

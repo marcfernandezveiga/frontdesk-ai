@@ -31,21 +31,27 @@ export function OnboardingPublished({
     >
       {/* Success mark */}
       <div className="flex flex-col items-center gap-4 mb-10">
-        <div className="w-14 h-14 rounded-full bg-[oklch(53%_0.16_145_/_0.1)] flex items-center justify-center">
+        <div
+          className="w-14 h-14 rounded-full flex items-center justify-center shadow-[0_0_0_6px_oklch(44%_0.16_145_/_0.1)]"
+          style={{
+            background: "oklch(44% 0.16 145 / 0.12)",
+            animation: "fd-confirm-pop 400ms cubic-bezier(0.0, 0, 0.2, 1) both",
+          }}
+        >
           <CheckCircle2
             size={28}
-            className="text-[oklch(40%_0.16_145)]"
+            className="text-[oklch(34%_0.16_145)]"
             aria-hidden="true"
           />
         </div>
         <div className="flex flex-col gap-2">
           <h2
-            className="text-2xl font-semibold tracking-tight text-[oklch(9%_0_0)]"
+            className="text-2xl font-semibold tracking-tight text-[oklch(7%_0_0)]"
             style={{ textWrap: "balance" } as React.CSSProperties}
           >
             {businessName} is live
           </h2>
-          <p className="text-sm text-[oklch(40%_0.005_264)] leading-relaxed max-w-[36ch] mx-auto">
+          <p className="text-sm text-[oklch(34%_0.005_264)] leading-relaxed max-w-[36ch] mx-auto">
             Share the link below with your customers. When they open it, they can call your AI receptionist directly.
           </p>
         </div>
@@ -66,7 +72,7 @@ export function OnboardingPublished({
           </div>
           <button
             onClick={copyCallUrl}
-            className="flex items-center gap-2 h-full px-4 py-3 border-l border-[oklch(88%_0.004_264)] text-sm font-medium text-[oklch(40%_0.005_264)] hover:bg-[oklch(97.5%_0.002_264)] hover:text-[oklch(9%_0_0)] transition-colors duration-150 outline-none cursor-pointer"
+            className="flex items-center gap-2 h-full px-4 py-3 border-l border-[oklch(84%_0.004_264)] text-sm font-medium text-[oklch(34%_0.005_264)] hover:bg-[oklch(97.5%_0.002_264)] hover:text-[oklch(7%_0_0)] transition-all duration-150 outline-none cursor-pointer focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[oklch(48%_0.2_264)]"
             aria-label="Copy caller link"
           >
             {copiedCall ? (
@@ -89,14 +95,14 @@ export function OnboardingPublished({
             href={`/c/${slug}`}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex-1 inline-flex items-center justify-center gap-2 h-10 px-4 text-sm font-medium rounded-[6px] border border-[oklch(88%_0.004_264)] text-[oklch(9%_0_0)] bg-white hover:bg-[oklch(97.5%_0.002_264)] hover:border-[oklch(78%_0.005_264)] transition-colors duration-150 outline-none cursor-pointer"
+            className="flex-1 inline-flex items-center justify-center gap-2 h-10 px-4 text-sm font-medium rounded-[6px] border border-[oklch(84%_0.004_264)] text-[oklch(7%_0_0)] bg-white hover:bg-[oklch(97.5%_0.002_264)] hover:border-[oklch(68%_0.005_264)] transition-all duration-150 outline-none cursor-pointer focus-visible:ring-2 focus-visible:ring-[oklch(48%_0.2_264)] focus-visible:ring-offset-1 active:scale-[0.98]"
           >
             <ExternalLink size={14} aria-hidden="true" />
             Open caller page
           </a>
           <a
             href={dashboardUrl}
-            className="flex-1 inline-flex items-center justify-center gap-2 h-10 px-4 text-sm font-medium rounded-[6px] border border-[oklch(88%_0.004_264)] text-[oklch(9%_0_0)] bg-white hover:bg-[oklch(97.5%_0.002_264)] hover:border-[oklch(78%_0.005_264)] transition-colors duration-150 outline-none cursor-pointer"
+            className="flex-1 inline-flex items-center justify-center gap-2 h-10 px-4 text-sm font-medium rounded-[6px] border border-[oklch(84%_0.004_264)] text-[oklch(7%_0_0)] bg-white hover:bg-[oklch(97.5%_0.002_264)] hover:border-[oklch(68%_0.005_264)] transition-all duration-150 outline-none cursor-pointer focus-visible:ring-2 focus-visible:ring-[oklch(48%_0.2_264)] focus-visible:ring-offset-1 active:scale-[0.98]"
           >
             <LayoutDashboard size={14} aria-hidden="true" />
             Dashboard

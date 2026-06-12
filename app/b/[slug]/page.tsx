@@ -18,6 +18,7 @@ import { ScheduleWeek } from "@/components/dashboard/ScheduleWeek";
 import { AppointmentCard, AppointmentCardSkeleton } from "@/components/dashboard/AppointmentCard";
 import { TranscriptPanel } from "@/components/dashboard/TranscriptPanel";
 import { themeToCssVars } from "@/lib/tenant";
+import { TenantHead } from "@/components/TenantHead";
 import type { TenantConfig } from "@/lib/tenant";
 import type { Appointment, CallLog, LiveCall } from "@/lib/types";
 import type { DashboardPayload } from "@/app/api/dashboard/route";
@@ -68,24 +69,24 @@ function AppointmentsPanel({
       {/* List */}
       <aside
         className="w-[340px] flex-shrink-0 flex flex-col border-r overflow-y-auto"
-        style={{ borderColor: "var(--fd-border, #eaeaea)" }}
+        style={{ borderColor: "var(--fd-border, oklch(86% 0.004 264))" }}
         aria-label="Appointments"
       >
         <div
           className="sticky top-0 z-10 px-4 pt-4 pb-3 border-b flex items-center justify-between"
           style={{
             background: "var(--fd-bg, #ffffff)",
-            borderColor: "var(--fd-border, #eaeaea)",
+            borderColor: "var(--fd-border, oklch(86% 0.004 264))",
           }}
         >
           <div className="flex items-center gap-1.5">
-            <CalendarCheck size={13} className="text-[oklch(55%_0.006_264)]" aria-hidden="true" />
-            <h2 className="text-xs font-semibold uppercase tracking-wide" style={{ color: "var(--fd-muted, #666666)" }}>
+            <CalendarCheck size={13} className="text-[oklch(48%_0.005_264)]" aria-hidden="true" />
+            <h2 className="text-xs font-semibold uppercase tracking-wide text-[oklch(34%_0.005_264)]">
               Bookings
             </h2>
           </div>
           {!loading && (
-            <span className="text-xs" style={{ color: "var(--fd-muted, #666666)" }}>
+            <span className="text-xs font-medium text-[oklch(50%_0.005_264)]">
               {appointments.length} total
             </span>
           )}
@@ -100,7 +101,7 @@ function AppointmentsPanel({
             </>
           ) : appointments.length === 0 ? (
             <EmptyState
-              icon={<CalendarCheck size={18} className="text-[oklch(60%_0.006_264)]" />}
+              icon={<CalendarCheck size={18} className="text-[oklch(50%_0.005_264)]" />}
               title="No appointments yet"
               body="Appointments booked through Frontdesk will appear here."
             />
@@ -131,21 +132,21 @@ function AppointmentsPanel({
         {selectedAppointment && (
           <div
             className="flex items-center gap-3 px-6 pt-5 pb-4 border-b flex-shrink-0"
-            style={{ borderColor: "var(--fd-border, #eaeaea)" }}
+            style={{ borderColor: "var(--fd-border, oklch(86% 0.004 264))" }}
           >
             <div
-              className="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 bg-[oklch(94%_0.003_264)]"
+              className="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 bg-[oklch(93%_0.003_264)]"
               aria-hidden="true"
             >
-              <span className="text-xs font-semibold text-[oklch(40%_0.005_264)]">
+              <span className="text-xs font-semibold text-[oklch(34%_0.005_264)]">
                 {selectedAppointment.caller_name.charAt(0).toUpperCase()}
               </span>
             </div>
             <div className="flex flex-col gap-0.5 min-w-0">
-              <span className="text-sm font-semibold" style={{ color: "var(--fd-fg, #0a0a0a)" }}>
+              <span className="text-sm font-semibold text-[oklch(7%_0_0)]">
                 {selectedAppointment.caller_name}
               </span>
-              <span className="text-xs truncate" style={{ color: "var(--fd-muted, #666666)" }}>
+              <span className="text-xs font-medium truncate text-[oklch(50%_0.005_264)]">
                 {selectedAppointment.reason}
               </span>
             </div>
@@ -175,12 +176,12 @@ function EmptyState({
 }) {
   return (
     <div className="flex flex-col items-center justify-center gap-3 py-16 px-4 text-center">
-      <div className="w-10 h-10 rounded-full bg-[oklch(94%_0.003_264)] flex items-center justify-center">
+      <div className="w-10 h-10 rounded-full bg-[oklch(93%_0.003_264)] flex items-center justify-center">
         {icon}
       </div>
       <div className="flex flex-col gap-1">
-        <p className="text-sm font-medium text-[oklch(40%_0.005_264)]">{title}</p>
-        <p className="text-xs text-[oklch(60%_0.006_264)] max-w-[24ch] leading-relaxed">{body}</p>
+        <p className="text-sm font-semibold text-[oklch(34%_0.005_264)]">{title}</p>
+        <p className="text-xs text-[oklch(50%_0.005_264)] max-w-[24ch] leading-relaxed">{body}</p>
       </div>
     </div>
   );
@@ -200,26 +201,26 @@ function TopBar({
       className="flex items-center justify-between px-5 py-3 border-b flex-shrink-0"
       style={{
         background: "var(--fd-bg, #ffffff)",
-        borderColor: "var(--fd-border, #eaeaea)",
+        borderColor: "var(--fd-border, oklch(86% 0.004 264))",
       }}
     >
-      <h1 className="text-sm font-semibold" style={{ color: "var(--fd-fg, #0a0a0a)" }}>
+      <h1 className="text-sm font-semibold" style={{ color: "var(--fd-fg, oklch(7% 0 0))" }}>
         {tabLabel}
       </h1>
       {activeCallCount > 0 && (
         <div
-          className="flex items-center gap-1.5 px-2.5 py-1 rounded-full border text-xs font-medium"
+          className="flex items-center gap-1.5 px-2.5 py-1 rounded-full border text-xs font-semibold"
           style={{
-            background: "oklch(57% 0.22 25 / 0.08)",
-            borderColor: "oklch(57% 0.22 25 / 0.2)",
-            color: "oklch(44% 0.22 25)",
+            background: "oklch(52% 0.22 25 / 0.08)",
+            borderColor: "oklch(52% 0.22 25 / 0.22)",
+            color: "oklch(38% 0.22 25)",
           }}
           role="status"
           aria-live="polite"
           aria-label={`${activeCallCount} active call${activeCallCount !== 1 ? "s" : ""} in progress`}
         >
           <span
-            className="w-1.5 h-1.5 rounded-full bg-[oklch(57%_0.22_25)]"
+            className="w-1.5 h-1.5 rounded-full bg-[oklch(52%_0.22_25)]"
             style={{ animation: "live-pulse 1.5s ease-in-out infinite" }}
             aria-hidden="true"
           />
@@ -328,6 +329,7 @@ export default function TenantDashboardPage() {
         fontFamily: "var(--fd-font-sans, ui-sans-serif, system-ui, sans-serif)",
       }}
     >
+      <TenantHead name={tenant?.name} logoUrl={tenant?.theme.logoUrl} />
       {/* Left sidebar */}
       <DashboardSidebar
         tenant={tenant}
@@ -344,7 +346,7 @@ export default function TenantDashboardPage() {
         {activeTab === "calendar" && (
           <div
             className="flex flex-col flex-1 min-h-0 overflow-hidden p-4"
-            style={{ background: "oklch(97.5% 0.002 264)" }}
+            style={{ background: "oklch(97% 0.002 264)" }}
           >
             <ScheduleWeek
               slots={scheduleSlots}

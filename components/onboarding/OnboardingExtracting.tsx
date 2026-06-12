@@ -82,23 +82,23 @@ export function OnboardingExtracting({
       </div>
 
       {/* Phase checklist */}
-      <div className="flex flex-col gap-1 mb-8" role="list" aria-label="Extraction steps">
+      <div className="flex flex-col gap-0.5 mb-8" role="list" aria-label="Extraction steps">
         {phases.map((phase, i) => {
           const isActive = !phase.done && phases.slice(0, i).every((p) => p.done);
           return (
             <div
               key={i}
               role="listitem"
-              className="flex items-center gap-3 py-2 transition-opacity duration-300"
+              className="flex items-center gap-3 px-3 py-2 rounded-[6px] transition-all duration-300"
               style={{
-                opacity: phase.done || isActive ? 1 : 0.4,
-                animation: isActive ? undefined : undefined,
+                opacity: phase.done || isActive ? 1 : 0.45,
+                background: isActive ? "oklch(97% 0.002 264)" : "transparent",
               }}
             >
               {phase.done ? (
                 <CheckCircle2
                   size={16}
-                  className="flex-shrink-0 text-[oklch(53%_0.16_145)]"
+                  className="flex-shrink-0 text-[oklch(44%_0.16_145)]"
                   aria-hidden="true"
                 />
               ) : isActive ? (
@@ -108,7 +108,7 @@ export function OnboardingExtracting({
                     {[0, 1, 2].map((j) => (
                       <span
                         key={j}
-                        className="block w-[3px] h-[3px] rounded-full bg-[oklch(48%_0.2_264)]"
+                        className="block w-[3px] h-[3px] rounded-full bg-[oklch(44%_0.2_264)]"
                         style={{
                           animation: `fd-dot-bounce 1.2s ease-in-out ${j * 0.15}s infinite`,
                         }}
@@ -119,7 +119,7 @@ export function OnboardingExtracting({
               ) : (
                 <Circle
                   size={16}
-                  className="flex-shrink-0 text-[oklch(88%_0.004_264)]"
+                  className="flex-shrink-0 text-[oklch(84%_0.004_264)]"
                   aria-hidden="true"
                 />
               )}
@@ -127,11 +127,11 @@ export function OnboardingExtracting({
                 className="text-sm"
                 style={{
                   color: phase.done
-                    ? "oklch(9% 0 0)"
+                    ? "oklch(7% 0 0)"
                     : isActive
-                    ? "oklch(20% 0 0)"
-                    : "oklch(60% 0.006 264)",
-                  fontWeight: isActive ? 500 : undefined,
+                    ? "oklch(10% 0 0)"
+                    : "oklch(54% 0.005 264)",
+                  fontWeight: isActive ? 600 : phase.done ? 500 : undefined,
                 }}
               >
                 {phase.label}

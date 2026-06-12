@@ -37,28 +37,49 @@ export function AppointmentCard({
   return (
     <button
       onClick={onClick}
-      className="w-full text-left px-4 py-4 rounded-[6px] border transition-all duration-150 outline-none group"
+      className="w-full text-left px-4 py-3.5 rounded-[6px] border transition-all duration-150 outline-none group cursor-pointer focus-visible:ring-2 focus-visible:ring-[oklch(48%_0.2_264)] focus-visible:ring-offset-1"
       style={
         isActive
           ? {
-              background: "color-mix(in oklch, var(--fd-accent, oklch(48% 0.2 264)) 6%, transparent)",
-              borderColor: "color-mix(in oklch, var(--fd-accent, oklch(48% 0.2 264)) 30%, transparent)",
+              background: "color-mix(in oklch, var(--fd-accent, oklch(48% 0.2 264)) 7%, transparent)",
+              borderColor: "color-mix(in oklch, var(--fd-accent, oklch(48% 0.2 264)) 34%, transparent)",
+              boxShadow: "0 1px 4px oklch(48% 0.2 264 / 0.08)",
             }
           : {
               background: "white",
-              borderColor: "oklch(88% 0.004 264)",
+              borderColor: "oklch(86% 0.004 264)",
             }
       }
       aria-pressed={isActive}
       aria-label={`Appointment: ${appointment.caller_name}, ${date} at ${time}`}
+      onMouseEnter={(e) => {
+        if (!isActive) (e.currentTarget as HTMLElement).style.borderColor = "oklch(74% 0.006 264)";
+        if (!isActive) (e.currentTarget as HTMLElement).style.background = "oklch(99% 0.001 264)";
+      }}
+      onMouseLeave={(e) => {
+        if (!isActive) (e.currentTarget as HTMLElement).style.borderColor = "oklch(86% 0.004 264)";
+        if (!isActive) (e.currentTarget as HTMLElement).style.background = "white";
+      }}
     >
       <div className="flex items-start gap-3">
         {/* Avatar */}
         <div
-          className="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5 bg-[oklch(94%_0.003_264)]"
+          className="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5"
+          style={{
+            background: isActive
+              ? "color-mix(in oklch, var(--fd-accent, oklch(48% 0.2 264)) 14%, white)"
+              : "oklch(93% 0.003 264)",
+          }}
           aria-hidden="true"
         >
-          <span className="text-xs font-semibold text-[oklch(40%_0.005_264)]">
+          <span
+            className="text-xs font-semibold"
+            style={{
+              color: isActive
+                ? "var(--fd-accent, oklch(48% 0.2 264))"
+                : "oklch(34% 0.005 264)",
+            }}
+          >
             {appointment.caller_name.charAt(0).toUpperCase()}
           </span>
         </div>
@@ -67,37 +88,37 @@ export function AppointmentCard({
           {/* Top row */}
           <div className="flex items-center justify-between gap-2 mb-1">
             <div className="flex items-center gap-2 min-w-0">
-              <span className="text-sm font-semibold text-[oklch(9%_0_0)] truncate">
+              <span className="text-sm font-semibold text-[oklch(7%_0_0)] truncate">
                 {appointment.caller_name}
               </span>
               <AppointmentStatusBadge status={appointment.status} />
             </div>
             <ChevronRight
               size={14}
-              className="flex-shrink-0 transition-colors duration-150"
+              className="flex-shrink-0 transition-all duration-150 group-hover:translate-x-0.5"
               style={{
                 color: isActive
                   ? "var(--fd-accent, oklch(48% 0.2 264))"
-                  : "oklch(78% 0.005 264)",
+                  : "oklch(72% 0.005 264)",
               }}
               aria-hidden="true"
             />
           </div>
 
           {/* Reason */}
-          <p className="text-sm text-[oklch(40%_0.005_264)] truncate mb-2">
+          <p className="text-sm text-[oklch(34%_0.005_264)] truncate mb-2">
             {appointment.reason}
           </p>
 
           {/* Meta row */}
           <div className="flex items-center gap-3">
-            <span className="inline-flex items-center gap-1 text-xs text-[oklch(60%_0.006_264)]">
+            <span className="inline-flex items-center gap-1 text-xs text-[oklch(50%_0.005_264)]">
               <Clock size={11} aria-hidden="true" />
               {date} · {time}
             </span>
             {hasTranscript && (
               <span
-                className="inline-flex items-center gap-1 text-xs"
+                className="inline-flex items-center gap-1 text-xs font-medium"
                 style={{ color: "var(--fd-accent, oklch(48% 0.2 264))" }}
               >
                 <MessageSquare size={11} aria-hidden="true" />
@@ -108,7 +129,7 @@ export function AppointmentCard({
 
           {/* AI summary shown inline when not expanded */}
           {callLog?.summary && !isActive && (
-            <p className="mt-2 text-xs text-[oklch(50%_0.006_264)] italic leading-relaxed line-clamp-2">
+            <p className="mt-2 text-xs text-[oklch(46%_0.005_264)] italic leading-relaxed line-clamp-2">
               &ldquo;{callLog.summary}&rdquo;
             </p>
           )}

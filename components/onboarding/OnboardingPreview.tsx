@@ -26,7 +26,7 @@ function Field({
   placeholder?: string;
 }) {
   const sharedClass =
-    "w-full px-3 text-sm border border-[oklch(88%_0.004_264)] rounded-[6px] bg-white text-[oklch(9%_0_0)] placeholder:text-[oklch(60%_0.006_264)] outline-none transition-colors duration-150 focus-visible:border-[oklch(48%_0.2_264)] focus-visible:ring-2 focus-visible:ring-[oklch(48%_0.2_264_/_0.15)]";
+    "w-full px-3 text-sm border border-[oklch(84%_0.004_264)] rounded-[6px] bg-white text-[oklch(7%_0_0)] placeholder:text-[oklch(56%_0.005_264)] outline-none transition-all duration-150 focus-visible:border-[oklch(48%_0.2_264)] focus-visible:ring-2 focus-visible:ring-[oklch(48%_0.2_264_/_0.15)] hover:border-[oklch(72%_0.005_264)]";
 
   return (
     <div className="flex flex-col gap-1.5">
@@ -84,7 +84,7 @@ function ServicesEditor({
               onChange={(e) => onServiceChange(i, e.target.value)}
               placeholder="Service name"
               aria-label={`Service ${i + 1}`}
-              className="flex-1 h-8 px-3 text-sm border border-[oklch(88%_0.004_264)] rounded-[6px] bg-white text-[oklch(9%_0_0)] placeholder:text-[oklch(60%_0.006_264)] outline-none transition-colors duration-150 focus-visible:border-[oklch(48%_0.2_264)] focus-visible:ring-2 focus-visible:ring-[oklch(48%_0.2_264_/_0.15)]"
+              className="flex-1 h-8 px-3 text-sm border border-[oklch(84%_0.004_264)] rounded-[6px] bg-white text-[oklch(7%_0_0)] placeholder:text-[oklch(56%_0.005_264)] outline-none transition-all duration-150 focus-visible:border-[oklch(48%_0.2_264)] focus-visible:ring-2 focus-visible:ring-[oklch(48%_0.2_264_/_0.15)] hover:border-[oklch(72%_0.005_264)]"
             />
             {services.length > 1 && (
               <button
@@ -254,7 +254,7 @@ export function OnboardingPreview({
           <button
             onClick={onPublish}
             disabled={publishing || !draft.name.trim()}
-            className="inline-flex items-center justify-center gap-2.5 h-12 px-6 text-sm font-medium rounded-[6px] bg-[oklch(9%_0_0)] text-white border border-[oklch(9%_0_0)] transition-all duration-150 outline-none cursor-pointer select-none hover:bg-[oklch(20%_0_0)] focus-visible:ring-2 focus-visible:ring-[oklch(48%_0.2_264)] focus-visible:ring-offset-2 disabled:opacity-40 disabled:cursor-not-allowed"
+            className="inline-flex items-center justify-center gap-2.5 h-12 px-6 text-sm font-semibold rounded-[6px] bg-[oklch(9%_0_0)] text-white border border-[oklch(9%_0_0)] transition-all duration-150 outline-none cursor-pointer select-none hover:bg-[oklch(18%_0_0)] active:scale-[0.98] focus-visible:ring-2 focus-visible:ring-[oklch(48%_0.2_264)] focus-visible:ring-offset-2 disabled:opacity-40 disabled:cursor-not-allowed shadow-[0_1px_3px_oklch(0%_0_0_/_0.18)]"
           >
             {publishing ? (
               <>

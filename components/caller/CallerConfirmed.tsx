@@ -40,18 +40,21 @@ export function CallerConfirmed({
   return (
     <div
       className="flex flex-col items-center gap-8 text-center"
-      style={{ animation: "status-fade-in 250ms ease-out" }}
+      style={{ animation: "status-fade-in 250ms cubic-bezier(0.0, 0, 0.2, 1)" }}
     >
       {/* Success icon */}
       <div className="flex flex-col items-center gap-4">
         <div
-          className="w-16 h-16 rounded-full flex items-center justify-center"
-          style={{ background: "oklch(53% 0.16 145 / 0.1)" }}
+          className="w-16 h-16 rounded-full flex items-center justify-center shadow-[0_0_0_6px_oklch(48%_0.16_145_/_0.08)]"
+          style={{
+            background: "oklch(48% 0.16 145 / 0.12)",
+            animation: "fd-confirm-pop 400ms cubic-bezier(0.0, 0, 0.2, 1) both",
+          }}
         >
           <CheckCircle
             size={32}
-            strokeWidth={1.5}
-            style={{ color: "oklch(40% 0.16 145)" }}
+            strokeWidth={1.75}
+            style={{ color: "oklch(36% 0.16 145)" }}
             aria-hidden="true"
           />
         </div>
@@ -78,8 +81,10 @@ export function CallerConfirmed({
         <div
           className="w-full max-w-xs rounded-[8px] p-5 text-left"
           style={{
-            border: "1px solid var(--fd-border)",
-            background: "color-mix(in oklch, var(--fd-bg) 95%, var(--fd-fg) 5%)",
+            border: "1px solid oklch(82% 0.004 264)",
+            background: "oklch(99% 0.002 264)",
+            boxShadow: "0 1px 4px oklch(0% 0 0 / 0.05)",
+            animation: "fd-slide-up 320ms 80ms cubic-bezier(0.0, 0, 0.2, 1) both",
           }}
         >
           <div className="flex flex-col gap-3">
@@ -120,7 +125,7 @@ export function CallerConfirmed({
 
       <button
         onClick={onReset}
-        className="inline-flex items-center justify-center gap-2 h-8 px-3 text-sm font-medium rounded-[6px] border transition-colors duration-150 outline-none cursor-pointer"
+        className="inline-flex items-center justify-center gap-2 h-8 px-3.5 text-sm font-medium rounded-[6px] border transition-all duration-150 outline-none cursor-pointer hover:bg-[oklch(97.5%_0.002_264)] hover:border-[oklch(74%_0.006_264)] focus-visible:ring-2 focus-visible:ring-[oklch(48%_0.2_264)] focus-visible:ring-offset-2"
         style={{
           color: "var(--fd-fg)",
           borderColor: "var(--fd-border)",

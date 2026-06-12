@@ -33,14 +33,14 @@ export function DashboardSidebar({
       className="flex flex-col w-56 flex-shrink-0 h-full border-r overflow-y-auto"
       style={{
         background: "var(--fd-bg, #ffffff)",
-        borderColor: "var(--fd-border, #eaeaea)",
+        borderColor: "var(--fd-border, oklch(86% 0.004 264))",
       }}
       aria-label="Dashboard navigation"
     >
       {/* Business identity */}
       <div
-        className="flex items-center gap-2.5 px-4 py-4 border-b"
-        style={{ borderColor: "var(--fd-border, #eaeaea)" }}
+        className="flex items-center gap-2.5 px-4 py-3.5 border-b"
+        style={{ borderColor: "var(--fd-border, oklch(86% 0.004 264))" }}
       >
         {logoUrl ? (
           <Image
@@ -52,7 +52,7 @@ export function DashboardSidebar({
           />
         ) : (
           <div
-            className="w-7 h-7 rounded-[6px] flex items-center justify-center flex-shrink-0 text-[11px] font-bold"
+            className="w-7 h-7 rounded-[6px] flex items-center justify-center flex-shrink-0 text-[11px] font-bold shadow-[0_1px_3px_oklch(0%_0_0_/_0.12)]"
             style={{
               background: "var(--fd-accent, #0070f3)",
               color: "var(--fd-accent-fg, #ffffff)",
@@ -89,7 +89,7 @@ export function DashboardSidebar({
               key={id}
               type="button"
               onClick={() => onTabChange(id)}
-              className="flex items-center gap-2.5 w-full px-3 py-2 rounded-[6px] text-left transition-all duration-150 outline-none cursor-pointer"
+              className="flex items-center gap-2.5 w-full px-3 py-2 rounded-[6px] text-left transition-all duration-150 outline-none cursor-pointer focus-visible:ring-2 focus-visible:ring-[oklch(48%_0.2_264)] focus-visible:ring-offset-1"
               style={
                 isActive
                   ? {
@@ -99,15 +99,21 @@ export function DashboardSidebar({
                     }
                   : {
                       background: "transparent",
-                      color: "var(--fd-muted, #666666)",
+                      color: "oklch(42% 0.005 264)",
                     }
               }
               aria-current={isActive ? "page" : undefined}
+              onMouseEnter={(e) => {
+                if (!isActive) (e.currentTarget as HTMLElement).style.background = "oklch(97% 0.002 264)";
+              }}
+              onMouseLeave={(e) => {
+                if (!isActive) (e.currentTarget as HTMLElement).style.background = "transparent";
+              }}
             >
               <Icon
                 size={15}
                 aria-hidden="true"
-                style={isActive ? { color: "var(--fd-accent, #0070f3)" } : undefined}
+                style={isActive ? { color: "var(--fd-accent, #0070f3)" } : { color: "oklch(52% 0.005 264)" }}
               />
               <span className="text-[13px] font-medium flex-1 truncate">{label}</span>
 
@@ -122,8 +128,8 @@ export function DashboardSidebar({
                           color: "var(--fd-accent-fg, #ffffff)",
                         }
                       : {
-                          background: "oklch(90% 0.003 264)",
-                          color: "oklch(40% 0.005 264)",
+                          background: "oklch(88% 0.004 264)",
+                          color: "oklch(34% 0.005 264)",
                         }
                   }
                 >
@@ -138,11 +144,11 @@ export function DashboardSidebar({
       {/* Footer */}
       <div
         className="px-4 py-3 border-t"
-        style={{ borderColor: "var(--fd-border, #eaeaea)" }}
+        style={{ borderColor: "var(--fd-border, oklch(86% 0.004 264))" }}
       >
         <p
           className="text-[10px] font-medium uppercase tracking-wide"
-          style={{ color: "var(--fd-muted, #666666)" }}
+          style={{ color: "oklch(58% 0.005 264)" }}
         >
           Powered by Frontdesk
         </p>

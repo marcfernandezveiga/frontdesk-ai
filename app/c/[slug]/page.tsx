@@ -18,6 +18,7 @@ import { useParams } from "next/navigation";
 import { ConversationProvider, useConversation } from "@elevenlabs/react";
 import { CallerPage } from "@/components/caller/CallerPage";
 import { themeToCssVars } from "@/lib/tenant";
+import { TenantHead } from "@/components/TenantHead";
 import type { CallState, SpeakerMode } from "@/components/caller/CallState";
 import type { TenantConfig } from "@/lib/tenant";
 import type { CheckAvailabilityResult, BookAppointmentResult } from "@/lib/types";
@@ -343,6 +344,7 @@ export default function TenantCallerPage() {
 
   return (
     <div style={cssVars}>
+      <TenantHead name={tenant.name} logoUrl={tenant.theme.logoUrl} />
       {tenant.theme.fontUrl && (
         // eslint-disable-next-line @next/next/no-page-custom-font
         <link rel="stylesheet" href={tenant.theme.fontUrl} />

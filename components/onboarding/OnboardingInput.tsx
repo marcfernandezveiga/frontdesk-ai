@@ -24,13 +24,10 @@ export function OnboardingInput({
     >
       {/* Header */}
       <div className="mb-10">
-        <p className="text-xs font-medium tracking-wide uppercase text-[oklch(60%_0.006_264)] mb-4">
-          Setup
-        </p>
-        <h1 className="text-3xl font-semibold tracking-[-0.03em] text-[oklch(9%_0_0)] mb-3" style={{ textWrap: "balance" } as React.CSSProperties}>
+        <h1 className="text-3xl font-semibold tracking-[-0.03em] text-[oklch(7%_0_0)] mb-3" style={{ textWrap: "balance" } as React.CSSProperties}>
           Set up your receptionist
         </h1>
-        <p className="text-base text-[oklch(40%_0.005_264)] leading-relaxed max-w-[44ch]">
+        <p className="text-base text-[oklch(34%_0.005_264)] leading-relaxed max-w-[44ch]">
           Paste your business website and a one-line description. We read your site, pull your brand, and build a ready-to-share caller page in about 20 seconds.
         </p>
       </div>
@@ -60,7 +57,7 @@ export function OnboardingInput({
               onChange={(e) => onUrlChange(e.target.value)}
               disabled={loading}
               required
-              className="w-full h-11 pl-10 pr-4 text-sm border border-[oklch(88%_0.004_264)] rounded-[6px] bg-white text-[oklch(9%_0_0)] placeholder:text-[oklch(60%_0.006_264)] outline-none transition-colors duration-150 focus-visible:border-[oklch(48%_0.2_264)] focus-visible:ring-2 focus-visible:ring-[oklch(48%_0.2_264_/_0.15)] disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full h-11 pl-10 pr-4 text-sm border border-[oklch(84%_0.004_264)] rounded-[6px] bg-white text-[oklch(7%_0_0)] placeholder:text-[oklch(56%_0.005_264)] outline-none transition-all duration-150 focus-visible:border-[oklch(48%_0.2_264)] focus-visible:ring-2 focus-visible:ring-[oklch(48%_0.2_264_/_0.15)] hover:border-[oklch(72%_0.005_264)] disabled:opacity-50 disabled:cursor-not-allowed"
             />
           </div>
         </div>
@@ -82,7 +79,7 @@ export function OnboardingInput({
             disabled={loading}
             required
             maxLength={200}
-            className="w-full h-11 px-4 text-sm border border-[oklch(88%_0.004_264)] rounded-[6px] bg-white text-[oklch(9%_0_0)] placeholder:text-[oklch(60%_0.006_264)] outline-none transition-colors duration-150 focus-visible:border-[oklch(48%_0.2_264)] focus-visible:ring-2 focus-visible:ring-[oklch(48%_0.2_264_/_0.15)] disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full h-11 px-4 text-sm border border-[oklch(84%_0.004_264)] rounded-[6px] bg-white text-[oklch(7%_0_0)] placeholder:text-[oklch(56%_0.005_264)] outline-none transition-all duration-150 focus-visible:border-[oklch(48%_0.2_264)] focus-visible:ring-2 focus-visible:ring-[oklch(48%_0.2_264_/_0.15)] hover:border-[oklch(72%_0.005_264)] disabled:opacity-50 disabled:cursor-not-allowed"
           />
           <p className="text-xs text-[oklch(60%_0.006_264)]">
             This helps us write accurate services and the agent greeting.
@@ -110,7 +107,7 @@ export function OnboardingInput({
         <button
           type="submit"
           disabled={loading || !url.trim() || !description.trim()}
-          className="inline-flex items-center justify-center gap-2.5 h-12 px-6 text-sm font-medium rounded-[6px] bg-[oklch(9%_0_0)] text-white border border-[oklch(9%_0_0)] transition-all duration-150 outline-none cursor-pointer select-none hover:bg-[oklch(20%_0_0)] focus-visible:ring-2 focus-visible:ring-[oklch(48%_0.2_264)] focus-visible:ring-offset-2 disabled:opacity-40 disabled:cursor-not-allowed mt-2"
+          className="inline-flex items-center justify-center gap-2.5 h-12 px-6 text-sm font-semibold rounded-[6px] bg-[oklch(9%_0_0)] text-white border border-[oklch(9%_0_0)] transition-all duration-150 outline-none cursor-pointer select-none hover:bg-[oklch(18%_0_0)] active:scale-[0.98] focus-visible:ring-2 focus-visible:ring-[oklch(48%_0.2_264)] focus-visible:ring-offset-2 disabled:opacity-40 disabled:cursor-not-allowed mt-2 shadow-[0_1px_3px_oklch(0%_0_0_/_0.18)]"
         >
           {loading ? (
             <>

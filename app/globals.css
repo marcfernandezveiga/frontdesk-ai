@@ -48,25 +48,25 @@
   /* Semantic surface tokens */
   --color-surface:        oklch(100% 0 0);
   --color-surface-raised: oklch(98.5% 0.002 264);
-  --color-border:         oklch(88% 0.004 264);
-  --color-border-strong:  oklch(78% 0.005 264);
+  --color-border:         oklch(86% 0.004 264);
+  --color-border-strong:  oklch(74% 0.006 264);
 
-  /* Semantic text tokens */
-  --color-text-primary:   oklch(9% 0 0);
-  --color-text-secondary: oklch(40% 0.005 264);
-  --color-text-muted:     oklch(60% 0.006 264);
+  /* Semantic text tokens — strengthened from original */
+  --color-text-primary:   oklch(7% 0 0);
+  --color-text-secondary: oklch(34% 0.005 264);
+  --color-text-muted:     oklch(52% 0.006 264);
   --color-text-inverse:   oklch(100% 0 0);
 
   /* Status colors */
-  --color-success:        oklch(53% 0.16 145);
-  --color-success-muted:  oklch(53% 0.16 145 / 0.1);
-  --color-warning:        oklch(68% 0.18 65);
-  --color-warning-muted:  oklch(68% 0.18 65 / 0.1);
-  --color-error:          oklch(57% 0.22 25);
-  --color-error-muted:    oklch(57% 0.22 25 / 0.1);
+  --color-success:        oklch(48% 0.16 145);
+  --color-success-muted:  oklch(48% 0.16 145 / 0.1);
+  --color-warning:        oklch(62% 0.18 65);
+  --color-warning-muted:  oklch(62% 0.18 65 / 0.1);
+  --color-error:          oklch(52% 0.22 25);
+  --color-error-muted:    oklch(52% 0.22 25 / 0.1);
 
   /* Live indicator */
-  --color-live:           oklch(57% 0.22 25);
+  --color-live:           oklch(52% 0.22 25);
 
   /* Spacing scale, 4pt base */
   --spacing-px: 1px;
@@ -143,8 +143,29 @@ body {
 }
 
 @keyframes status-fade-in {
-  from { opacity: 0; transform: translateY(4px); }
+  from { opacity: 0; transform: translateY(6px); }
   to   { opacity: 1; transform: translateY(0);   }
+}
+
+@keyframes fd-panel-in {
+  from { opacity: 0; transform: translateX(8px); }
+  to   { opacity: 1; transform: translateX(0);   }
+}
+
+@keyframes fd-slide-up {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0);    }
+}
+
+@keyframes fd-scale-in {
+  from { opacity: 0; transform: scale(0.95); }
+  to   { opacity: 1; transform: scale(1);    }
+}
+
+@keyframes fd-confirm-pop {
+  0%   { opacity: 0; transform: scale(0.85); }
+  60%  { transform: scale(1.04); }
+  100% { opacity: 1; transform: scale(1); }
 }
 
 @keyframes live-pulse {
@@ -163,6 +184,10 @@ body {
   @keyframes pulse-ring    { 0%, 100% { opacity: 0; } }
   @keyframes orb-breathe   { 0%, 100% { transform: scale(1); } }
   @keyframes status-fade-in { from { opacity: 0; } to { opacity: 1; } }
+  @keyframes fd-panel-in   { from { opacity: 0; } to { opacity: 1; } }
+  @keyframes fd-slide-up   { from { opacity: 0; } to { opacity: 1; } }
+  @keyframes fd-scale-in   { from { opacity: 0; } to { opacity: 1; } }
+  @keyframes fd-confirm-pop { from { opacity: 0; } to { opacity: 1; } }
   @keyframes live-pulse    { 0%, 100% { opacity: 1; } }
   @keyframes spinner       { to { transform: rotate(360deg); } }
 }
@@ -208,6 +233,19 @@ body {
   @keyframes fd-step-in      { from { opacity: 0; } to { opacity: 1; } }
   @keyframes fd-dot-bounce   { 0%, 100% { opacity: 0.4; } 50% { opacity: 1; } }
   @keyframes fd-progress-fill { 0% { width: 0%; } 100% { width: 100%; } }
+}
+
+/* ─── Interactive baseline ───────────────────────────────────────────────────── */
+/* Ensures focus-visible rings are always visible regardless of component style  */
+
+:focus-visible {
+  outline: 2px solid oklch(48% 0.2 264);
+  outline-offset: 2px;
+}
+
+/* Suppress default outline on elements that handle focus-visible themselves */
+[data-focus-handled]:focus {
+  outline: none;
 }
 
 /* ─── Scrollbar (product UI) ────────────────────────────────────────────────── */

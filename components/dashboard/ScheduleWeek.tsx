@@ -151,25 +151,43 @@ function SlotBlock({ slot, height }: { slot: ScheduleSlot; height: number }) {
 
   return (
     <div
-      className="absolute inset-x-[2px] rounded-[4px] overflow-hidden transition-opacity duration-100 hover:opacity-90"
+      className="absolute inset-x-[2px] rounded-[4px] overflow-hidden transition-all duration-120"
       style={{
         height,
         background: isBooked
-          ? "color-mix(in oklch, var(--fd-accent, #0070f3) 14%, white)"
-          : "oklch(96.5% 0.003 264)",
+          ? "color-mix(in oklch, var(--fd-accent, #0070f3) 16%, white)"
+          : "oklch(97% 0.002 264)",
         border: isBooked
-          ? "1px solid color-mix(in oklch, var(--fd-accent, #0070f3) 35%, transparent)"
-          : "1px solid oklch(89% 0.003 264)",
+          ? "1px solid color-mix(in oklch, var(--fd-accent, #0070f3) 40%, transparent)"
+          : "1px solid oklch(88% 0.004 264)",
       }}
       aria-label={
         isBooked
           ? `Booked: ${slot.appointment?.callerName ?? "unknown"}`
           : "Available"
       }
+      onMouseEnter={(e) => {
+        const el = e.currentTarget as HTMLElement;
+        if (isBooked) {
+          el.style.background = "color-mix(in oklch, var(--fd-accent, #0070f3) 22%, white)";
+        } else {
+          el.style.background = "oklch(95% 0.003 264)";
+          el.style.borderColor = "oklch(82% 0.004 264)";
+        }
+      }}
+      onMouseLeave={(e) => {
+        const el = e.currentTarget as HTMLElement;
+        if (isBooked) {
+          el.style.background = "color-mix(in oklch, var(--fd-accent, #0070f3) 16%, white)";
+        } else {
+          el.style.background = "oklch(97% 0.002 264)";
+          el.style.borderColor = "oklch(88% 0.004 264)";
+        }
+      }}
     >
       {showName && (
         <p
-          className="px-1.5 pt-0.5 text-[10px] font-medium leading-tight truncate"
+          className="px-1.5 pt-0.5 text-[10px] font-semibold leading-tight truncate"
           style={{ color: "var(--fd-accent, #0070f3)" }}
         >
           {slot.appointment!.callerName}
@@ -232,14 +250,14 @@ export function ScheduleWeek({
 
   return (
     <div
-      className="flex flex-col bg-white rounded-[8px] border border-[oklch(88%_0.004_264)] overflow-hidden"
+      className="flex flex-col bg-white rounded-[8px] border border-[oklch(86%_0.004_264)] overflow-hidden shadow-[0_1px_4px_oklch(0%_0_0_/_0.05)]"
       style={{ minHeight: 0, flex: 1 }}
     >
       {/* Header: week nav */}
-      <div className="flex items-center justify-between px-4 py-3 border-b border-[oklch(88%_0.004_264)] bg-[oklch(98.5%_0.002_264)] flex-shrink-0">
+      <div className="flex items-center justify-between px-4 py-3 border-b border-[oklch(86%_0.004_264)] bg-[oklch(98.5%_0.002_264)] flex-shrink-0">
         <div className="flex items-center gap-2">
-          <CalendarDays size={14} className="text-[oklch(55%_0.006_264)]" aria-hidden="true" />
-          <span className="text-sm font-semibold text-[oklch(9%_0_0)] tabular-nums">
+          <CalendarDays size={14} className="text-[oklch(48%_0.005_264)]" aria-hidden="true" />
+          <span className="text-sm font-semibold text-[oklch(7%_0_0)] tabular-nums">
             {weekLabel}
           </span>
         </div>
@@ -248,7 +266,7 @@ export function ScheduleWeek({
             type="button"
             onClick={onPrevWeek}
             aria-label="Previous week"
-            className="w-8 h-8 flex items-center justify-center rounded-[6px] text-[oklch(55%_0.006_264)] hover:text-[oklch(9%_0_0)] hover:bg-[oklch(94%_0.003_264)] transition-colors duration-150 outline-none cursor-pointer"
+            className="w-8 h-8 flex items-center justify-center rounded-[6px] text-[oklch(46%_0.005_264)] hover:text-[oklch(7%_0_0)] hover:bg-[oklch(93%_0.003_264)] transition-all duration-150 outline-none cursor-pointer focus-visible:ring-2 focus-visible:ring-[oklch(48%_0.2_264)] focus-visible:ring-offset-1"
           >
             <ChevronLeft size={15} aria-hidden="true" />
           </button>
@@ -256,16 +274,16 @@ export function ScheduleWeek({
             type="button"
             onClick={onNextWeek}
             aria-label="Next week"
-            className="w-8 h-8 flex items-center justify-center rounded-[6px] text-[oklch(55%_0.006_264)] hover:text-[oklch(9%_0_0)] hover:bg-[oklch(94%_0.003_264)] transition-colors duration-150 outline-none cursor-pointer"
+            className="w-8 h-8 flex items-center justify-center rounded-[6px] text-[oklch(46%_0.005_264)] hover:text-[oklch(7%_0_0)] hover:bg-[oklch(93%_0.003_264)] transition-all duration-150 outline-none cursor-pointer focus-visible:ring-2 focus-visible:ring-[oklch(48%_0.2_264)] focus-visible:ring-offset-1"
           >
             <ChevronRight size={15} aria-hidden="true" />
           </button>
         </div>
       </div>
 
-      {/* Day column headers (sticky) */}
+      {/* Day column headers */}
       <div
-        className="flex flex-shrink-0 border-b border-[oklch(88%_0.004_264)] bg-white"
+        className="flex flex-shrink-0 border-b border-[oklch(86%_0.004_264)] bg-white"
         style={{ paddingLeft: GUTTER_WIDTH }}
       >
         {days.map((day, i) => {
@@ -273,18 +291,18 @@ export function ScheduleWeek({
           return (
             <div
               key={i}
-              className="flex-1 px-1 py-2 text-center border-l border-[oklch(92%_0.003_264)] first:border-l-0"
+              className="flex-1 px-1 py-2 text-center border-l border-[oklch(90%_0.003_264)] first:border-l-0"
             >
               <span
                 className={`text-xs font-semibold block leading-none mb-0.5 ${
-                  today ? "text-[oklch(48%_0.2_264)]" : "text-[oklch(40%_0.005_264)]"
+                  today ? "text-[oklch(44%_0.2_264)]" : "text-[oklch(34%_0.005_264)]"
                 }`}
               >
                 {DAY_LABELS[i]}
               </span>
               <span
-                className={`text-[10px] leading-none ${
-                  today ? "text-[oklch(48%_0.2_264)]" : "text-[oklch(60%_0.006_264)]"
+                className={`text-[10px] leading-none font-medium ${
+                  today ? "text-[oklch(44%_0.2_264)]" : "text-[oklch(52%_0.005_264)]"
                 }`}
               >
                 {day.getDate()}
@@ -362,28 +380,28 @@ export function ScheduleWeek({
 
       {/* Legend */}
       {!loading && hasAnySlot && (
-        <div className="flex items-center gap-4 px-4 py-2 border-t border-[oklch(92%_0.003_264)] bg-[oklch(98.5%_0.002_264)] flex-shrink-0">
+        <div className="flex items-center gap-4 px-4 py-2 border-t border-[oklch(88%_0.004_264)] bg-[oklch(98.5%_0.002_264)] flex-shrink-0">
           <div className="flex items-center gap-1.5">
             <div
               className="w-3 h-3 rounded-[2px]"
               style={{
-                background: "oklch(96.5% 0.003 264)",
-                border: "1px solid oklch(89% 0.003 264)",
+                background: "oklch(97% 0.002 264)",
+                border: "1px solid oklch(88% 0.004 264)",
               }}
               aria-hidden="true"
             />
-            <span className="text-xs text-[oklch(55%_0.006_264)]">Available</span>
+            <span className="text-xs font-medium text-[oklch(48%_0.005_264)]">Available</span>
           </div>
           <div className="flex items-center gap-1.5">
             <div
               className="w-3 h-3 rounded-[2px]"
               style={{
-                background: "color-mix(in oklch, var(--fd-accent, #0070f3) 14%, white)",
-                border: "1px solid color-mix(in oklch, var(--fd-accent, #0070f3) 35%, transparent)",
+                background: "color-mix(in oklch, var(--fd-accent, #0070f3) 16%, white)",
+                border: "1px solid color-mix(in oklch, var(--fd-accent, #0070f3) 40%, transparent)",
               }}
               aria-hidden="true"
             />
-            <span className="text-xs text-[oklch(55%_0.006_264)]">Booked</span>
+            <span className="text-xs font-medium text-[oklch(48%_0.005_264)]">Booked</span>
           </div>
         </div>
       )}

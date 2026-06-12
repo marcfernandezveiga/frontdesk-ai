@@ -52,7 +52,7 @@ export function DashboardPage({
   }, [activeTab, selectedConversationId, liveCalls, callLogs]);
 
   return (
-    <div className="flex flex-col h-dvh bg-[oklch(97.5%_0.002_264)]">
+    <div className="flex flex-col h-dvh bg-[oklch(97%_0.002_264)]">
       {/* Sticky header */}
       <DashboardHeader
         {...header}
@@ -67,41 +67,41 @@ export function DashboardPage({
       <div className="flex flex-1 min-h-0">
         {/* ── Left: Appointments list ── */}
         <aside
-          className="w-[360px] flex-shrink-0 flex flex-col border-r border-[oklch(88%_0.004_264)] bg-white overflow-y-auto"
+          className="w-[360px] flex-shrink-0 flex flex-col border-r border-[oklch(86%_0.004_264)] bg-white overflow-y-auto"
           aria-label="Appointments"
         >
           {/* Section heading */}
-          <div className="px-4 pt-4 pb-3 border-b border-[oklch(88%_0.004_264)] sticky top-0 bg-white z-10">
-            <div className="grid grid-cols-2 gap-1 rounded-[8px] bg-[oklch(96%_0.003_264)] p-1">
+          <div className="px-4 pt-4 pb-3 border-b border-[oklch(86%_0.004_264)] sticky top-0 bg-white z-10">
+            <div className="grid grid-cols-2 gap-1 rounded-[8px] bg-[oklch(95%_0.003_264)] p-1">
               <button
                 onClick={() => setActiveTab("appointments")}
-                className="h-8 rounded-[6px] text-xs font-semibold transition-colors"
+                className="h-8 rounded-[6px] text-xs font-semibold transition-all duration-150 cursor-pointer outline-none focus-visible:ring-2 focus-visible:ring-[oklch(48%_0.2_264)]"
                 style={{
                   background: activeTab === "appointments" ? "white" : "transparent",
-                  color: activeTab === "appointments" ? "oklch(9% 0 0)" : "oklch(45% 0.006 264)",
-                  boxShadow: activeTab === "appointments" ? "0 1px 4px oklch(0% 0 0 / 0.08)" : "none",
+                  color: activeTab === "appointments" ? "oklch(7% 0 0)" : "oklch(42% 0.005 264)",
+                  boxShadow: activeTab === "appointments" ? "0 1px 4px oklch(0% 0 0 / 0.1),0 0 0 1px oklch(86% 0.004 264)" : "none",
                 }}
               >
                 Appointments
               </button>
               <button
                 onClick={() => setActiveTab("conversations")}
-                className="h-8 rounded-[6px] text-xs font-semibold transition-colors"
+                className="h-8 rounded-[6px] text-xs font-semibold transition-all duration-150 cursor-pointer outline-none focus-visible:ring-2 focus-visible:ring-[oklch(48%_0.2_264)]"
                 style={{
                   background: activeTab === "conversations" ? "white" : "transparent",
-                  color: activeTab === "conversations" ? "oklch(9% 0 0)" : "oklch(45% 0.006 264)",
-                  boxShadow: activeTab === "conversations" ? "0 1px 4px oklch(0% 0 0 / 0.08)" : "none",
+                  color: activeTab === "conversations" ? "oklch(7% 0 0)" : "oklch(42% 0.005 264)",
+                  boxShadow: activeTab === "conversations" ? "0 1px 4px oklch(0% 0 0 / 0.1),0 0 0 1px oklch(86% 0.004 264)" : "none",
                 }}
               >
                 Conversations
               </button>
             </div>
             <div className="flex items-center justify-between pt-3">
-              <h2 className="text-xs font-semibold text-[oklch(40%_0.005_264)] uppercase tracking-wide">
+              <h2 className="text-xs font-semibold text-[oklch(34%_0.005_264)] uppercase tracking-wide">
                 {activeTab === "appointments" ? "Bookings" : "Phone calls"}
               </h2>
               {!loading && (
-                <span className="text-xs text-[oklch(60%_0.006_264)]">
+                <span className="text-xs font-medium text-[oklch(50%_0.005_264)]">
                   {activeTab === "appointments"
                     ? `${appointments.length} total`
                     : `${liveCalls.length + callLogs.length} total`}
@@ -175,48 +175,49 @@ export function DashboardPage({
           className="flex-1 flex flex-col bg-white overflow-hidden"
           aria-label="Call transcript"
           id="transcript-panel"
+          style={{ animation: "fd-panel-in 180ms cubic-bezier(0.0, 0, 0.2, 1)" }}
         >
           {activeTab === "appointments" && selectedAppointment && (
-            <div className="flex items-center gap-3 px-6 pt-5 pb-4 border-b border-[oklch(88%_0.004_264)]">
+            <div className="flex items-center gap-3 px-6 pt-5 pb-4 border-b border-[oklch(86%_0.004_264)]">
               <div
-                className="w-7 h-7 rounded-full bg-[oklch(94%_0.003_264)] flex items-center justify-center flex-shrink-0"
+                className="w-7 h-7 rounded-full bg-[oklch(93%_0.003_264)] flex items-center justify-center flex-shrink-0"
                 aria-hidden="true"
               >
-                <span className="text-xs font-semibold text-[oklch(40%_0.005_264)]">
+                <span className="text-xs font-semibold text-[oklch(34%_0.005_264)]">
                   {selectedAppointment.caller_name.charAt(0).toUpperCase()}
                 </span>
               </div>
               <div className="flex flex-col gap-0.5 min-w-0">
-                <span className="text-sm font-semibold text-[oklch(9%_0_0)]">
+                <span className="text-sm font-semibold text-[oklch(7%_0_0)]">
                   {selectedAppointment.caller_name}
                 </span>
-                <span className="text-xs text-[oklch(60%_0.006_264)] truncate">
+                <span className="text-xs font-medium text-[oklch(50%_0.005_264)] truncate">
                   {selectedAppointment.reason}
                 </span>
               </div>
             </div>
           )}
           {activeTab === "conversations" && (panelLiveCall || panelCallLog) && (
-            <div className="flex items-center gap-3 px-6 pt-5 pb-4 border-b border-[oklch(88%_0.004_264)]">
+            <div className="flex items-center gap-3 px-6 pt-5 pb-4 border-b border-[oklch(86%_0.004_264)]">
               <div
                 className="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0"
                 style={{
                   background: panelLiveCall
                     ? "color-mix(in oklch, var(--fd-accent, oklch(48% 0.2 264)) 10%, white)"
-                    : "oklch(94% 0.003 264)",
-                  color: panelLiveCall ? "var(--fd-accent, oklch(48% 0.2 264))" : "oklch(40% 0.005 264)",
+                    : "oklch(93% 0.003 264)",
+                  color: panelLiveCall ? "var(--fd-accent, oklch(48% 0.2 264))" : "oklch(34% 0.005 264)",
                 }}
                 aria-hidden="true"
               >
                 {panelLiveCall ? <PhoneIncoming size={15} /> : <FileText size={15} />}
               </div>
               <div className="flex flex-col gap-0.5 min-w-0">
-                <span className="text-sm font-semibold text-[oklch(9%_0_0)]">
+                <span className="text-sm font-semibold text-[oklch(7%_0_0)]">
                   {panelLiveCall
                     ? panelLiveCall.caller_name ?? panelLiveCall.caller_phone ?? "Incoming caller"
                     : appointmentNameForLog(panelCallLog?.appointment_id ?? null, appointments)}
                 </span>
-                <span className="text-xs text-[oklch(60%_0.006_264)] truncate">
+                <span className="text-xs font-medium text-[oklch(50%_0.005_264)] truncate">
                   {panelLiveCall ? "Live STT transcript" : "Completed call transcript"}
                 </span>
               </div>
@@ -268,18 +269,27 @@ function ConversationCard({
   return (
     <button
       onClick={onClick}
-      className="w-full text-left px-4 py-4 rounded-[8px] border transition-all duration-150 outline-none"
+      className="w-full text-left px-4 py-3.5 rounded-[6px] border transition-all duration-150 outline-none cursor-pointer focus-visible:ring-2 focus-visible:ring-[oklch(48%_0.2_264)] focus-visible:ring-offset-1"
       style={
         isActive
           ? {
               background: "color-mix(in oklch, var(--fd-accent, oklch(48% 0.2 264)) 7%, white)",
-              borderColor: "color-mix(in oklch, var(--fd-accent, oklch(48% 0.2 264)) 30%, transparent)",
+              borderColor: "color-mix(in oklch, var(--fd-accent, oklch(48% 0.2 264)) 34%, transparent)",
+              boxShadow: "0 1px 4px oklch(48% 0.2 264 / 0.08)",
             }
           : {
               background: "white",
-              borderColor: "oklch(88% 0.004 264)",
+              borderColor: "oklch(86% 0.004 264)",
             }
       }
+      onMouseEnter={(e) => {
+        if (!isActive) (e.currentTarget as HTMLElement).style.borderColor = "oklch(74% 0.006 264)";
+        if (!isActive) (e.currentTarget as HTMLElement).style.background = "oklch(99% 0.001 264)";
+      }}
+      onMouseLeave={(e) => {
+        if (!isActive) (e.currentTarget as HTMLElement).style.borderColor = "oklch(86% 0.004 264)";
+        if (!isActive) (e.currentTarget as HTMLElement).style.background = "white";
+      }}
     >
       <div className="flex items-start gap-3">
         <div
@@ -287,18 +297,18 @@ function ConversationCard({
           style={{
             background: isLive
               ? "color-mix(in oklch, var(--fd-accent, oklch(48% 0.2 264)) 10%, white)"
-              : "oklch(94% 0.003 264)",
-            color: isLive ? "var(--fd-accent, oklch(48% 0.2 264))" : "oklch(45% 0.006 264)",
+              : "oklch(93% 0.003 264)",
+            color: isLive ? "var(--fd-accent, oklch(48% 0.2 264))" : "oklch(40% 0.005 264)",
           }}
         >
           {isLive ? <PhoneIncoming size={14} aria-hidden="true" /> : <FileText size={14} aria-hidden="true" />}
         </div>
         <div className="min-w-0 flex-1">
           <div className="flex items-center justify-between gap-2">
-            <p className="text-sm font-semibold text-[oklch(9%_0_0)] truncate">{title}</p>
+            <p className="text-sm font-semibold text-[oklch(7%_0_0)] truncate">{title}</p>
             {isLive && (
               <span
-                className="inline-flex items-center gap-1 text-[11px] font-medium"
+                className="inline-flex items-center gap-1 text-[11px] font-semibold"
                 style={{ color: "var(--fd-accent, oklch(48% 0.2 264))" }}
               >
                 <span
@@ -312,8 +322,8 @@ function ConversationCard({
               </span>
             )}
           </div>
-          <p className="text-xs text-[oklch(60%_0.006_264)] mt-0.5">{subtitle}</p>
-          <p className="text-xs text-[oklch(45%_0.006_264)] mt-2 line-clamp-2 leading-relaxed">
+          <p className="text-xs font-medium text-[oklch(50%_0.005_264)] mt-0.5">{subtitle}</p>
+          <p className="text-xs text-[oklch(42%_0.005_264)] mt-2 line-clamp-2 leading-relaxed">
             {transcript || "Waiting for speech..."}
           </p>
         </div>
@@ -325,18 +335,18 @@ function ConversationCard({
 function EmptyAppointments() {
   return (
     <div className="flex flex-col items-center justify-center gap-3 py-16 px-4 text-center">
-      <div className="w-10 h-10 rounded-full bg-[oklch(94%_0.003_264)] flex items-center justify-center">
+      <div className="w-10 h-10 rounded-full bg-[oklch(93%_0.003_264)] flex items-center justify-center">
         <CalendarX
           size={18}
-          className="text-[oklch(60%_0.006_264)]"
+          className="text-[oklch(50%_0.005_264)]"
           aria-hidden="true"
         />
       </div>
       <div className="flex flex-col gap-1">
-        <p className="text-sm font-medium text-[oklch(40%_0.005_264)]">
+        <p className="text-sm font-semibold text-[oklch(34%_0.005_264)]">
           No appointments yet
         </p>
-        <p className="text-xs text-[oklch(60%_0.006_264)] max-w-[22ch] leading-relaxed">
+        <p className="text-xs text-[oklch(50%_0.005_264)] max-w-[22ch] leading-relaxed">
           Appointments booked through Frontdesk will appear here.
         </p>
       </div>
@@ -347,18 +357,18 @@ function EmptyAppointments() {
 function EmptyConversations() {
   return (
     <div className="flex flex-col items-center justify-center gap-3 py-16 px-4 text-center">
-      <div className="w-10 h-10 rounded-full bg-[oklch(94%_0.003_264)] flex items-center justify-center">
+      <div className="w-10 h-10 rounded-full bg-[oklch(93%_0.003_264)] flex items-center justify-center">
         <PhoneIncoming
           size={18}
-          className="text-[oklch(60%_0.006_264)]"
+          className="text-[oklch(50%_0.005_264)]"
           aria-hidden="true"
         />
       </div>
       <div className="flex flex-col gap-1">
-        <p className="text-sm font-medium text-[oklch(40%_0.005_264)]">
+        <p className="text-sm font-semibold text-[oklch(34%_0.005_264)]">
           No calls yet
         </p>
-        <p className="text-xs text-[oklch(60%_0.006_264)] max-w-[24ch] leading-relaxed">
+        <p className="text-xs text-[oklch(50%_0.005_264)] max-w-[24ch] leading-relaxed">
           Incoming phone calls and transcripts will appear here.
         </p>
       </div>

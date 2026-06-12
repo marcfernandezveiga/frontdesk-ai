@@ -4,8 +4,8 @@ import { GeistMono } from "geist/font/mono";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Frontdesk | Marina Physio",
-  description: "AI voice receptionist for Marina Physio. Book an appointment instantly.",
+  title: { default: "Frontdesk", template: "%s | Frontdesk" },
+  description: "AI voice receptionists for local businesses. Set one up in seconds.",
 };
 
 export default function RootLayout({

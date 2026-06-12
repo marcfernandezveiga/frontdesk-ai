@@ -16,17 +16,17 @@ export function AvailabilityStrip({ slots, loading = false }: AvailabilityStripP
   return (
     <section
       aria-labelledby="availability-heading"
-      className="px-6 py-4 border-b border-[oklch(88%_0.004_264)]"
+      className="px-6 py-3.5 border-b border-[oklch(86%_0.004_264)]"
     >
       <div className="flex items-center gap-2 mb-3">
         <CalendarDays
-          size={14}
-          className="text-[oklch(60%_0.006_264)]"
+          size={13}
+          className="text-[oklch(50%_0.005_264)]"
           aria-hidden="true"
         />
         <h2
           id="availability-heading"
-          className="text-xs font-semibold text-[oklch(40%_0.005_264)] tracking-wide uppercase"
+          className="text-xs font-semibold text-[oklch(34%_0.005_264)] tracking-wide uppercase"
         >
           Open slots today
         </h2>
@@ -40,7 +40,7 @@ export function AvailabilityStrip({ slots, loading = false }: AvailabilityStripP
             <SkeletonPill />
           </>
         ) : slots.length === 0 ? (
-          <p className="text-sm text-[oklch(60%_0.006_264)]">
+          <p className="text-sm text-[oklch(50%_0.005_264)]">
             No open slots remaining today.
           </p>
         ) : (
@@ -50,11 +50,11 @@ export function AvailabilityStrip({ slots, loading = false }: AvailabilityStripP
               role="listitem"
               className={`
                 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-[4px] text-xs font-medium
-                border transition-colors duration-150
+                border transition-all duration-150
                 ${
                   slot.is_booked
-                    ? "bg-[oklch(94%_0.003_264)] border-[oklch(88%_0.004_264)] text-[oklch(60%_0.006_264)] line-through"
-                    : "bg-[oklch(48%_0.2_264_/_0.06)] border-[oklch(48%_0.2_264_/_0.2)] text-[oklch(38%_0.2_264)]"
+                    ? "bg-[oklch(95%_0.002_264)] border-[oklch(88%_0.004_264)] text-[oklch(56%_0.005_264)] line-through"
+                    : "bg-[oklch(48%_0.2_264_/_0.06)] border-[oklch(48%_0.2_264_/_0.22)] text-[oklch(34%_0.2_264)] hover:bg-[oklch(48%_0.2_264_/_0.1)] hover:border-[oklch(48%_0.2_264_/_0.35)] cursor-default"
                 }
               `}
             >

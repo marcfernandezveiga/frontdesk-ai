@@ -49,7 +49,7 @@ export function CallerPage({
     >
       {/* Minimal header */}
       <header
-        className="flex items-center justify-between px-6 py-5"
+        className="flex items-center justify-between px-6 py-4"
         style={{ borderBottom: "1px solid var(--fd-border)" }}
       >
         <div className="flex items-center gap-2.5">
@@ -63,7 +63,7 @@ export function CallerPage({
             />
           ) : (
             <div
-              className="w-6 h-6 rounded-[4px] flex items-center justify-center"
+              className="w-6 h-6 rounded-[4px] flex items-center justify-center transition-transform duration-150 hover:scale-105"
               style={{ background: "var(--fd-fg)" }}
             >
               <span
@@ -76,15 +76,19 @@ export function CallerPage({
             </div>
           )}
           <span
-            className="text-sm font-medium"
+            className="text-sm font-semibold"
             style={{ color: "var(--fd-fg)" }}
           >
             {tenant?.name ?? "Frontdesk"}
           </span>
         </div>
         <span
-          className="text-xs"
-          style={{ color: "var(--fd-muted)" }}
+          className="text-xs font-medium px-2.5 py-1 rounded-full"
+          style={{
+            color: "var(--fd-muted)",
+            background: "color-mix(in oklch, var(--fd-fg) 5%, var(--fd-bg))",
+            border: "1px solid var(--fd-border)",
+          }}
         >
           AI Receptionist
         </span>
@@ -136,7 +140,7 @@ export function CallerPage({
           Powered by{" "}
           <span
             className="font-medium"
-            style={{ color: "var(--fd-fg)", opacity: 0.6 }}
+            style={{ color: "var(--fd-fg)", opacity: 0.7 }}
           >
             Frontdesk
           </span>

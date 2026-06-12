@@ -16,9 +16,12 @@ export function CallerIdle({ clinicName, tagline, tenant, onStartCall }: CallerI
   const services = tenant?.services.slice(0, 4) ?? [];
 
   return (
-    <div className="flex flex-col items-center gap-6 text-center">
+    <div
+      className="flex flex-col items-center gap-6 text-center"
+      style={{ animation: "fd-slide-up 280ms cubic-bezier(0.0, 0, 0.2, 1) both" }}
+    >
       <div
-        className="w-full overflow-hidden border shadow-[0_18px_50px_oklch(0%_0_0_/_0.12)]"
+        className="w-full overflow-hidden border shadow-[0_2px_8px_oklch(0%_0_0_/_0.07),0_20px_56px_oklch(0%_0_0_/_0.13)]"
         style={{
           borderColor: "var(--fd-border)",
           borderRadius: "calc(var(--fd-radius) + 8px)",
@@ -45,13 +48,13 @@ export function CallerIdle({ clinicName, tagline, tenant, onStartCall }: CallerI
             className="absolute inset-0"
             style={{
               background:
-                "linear-gradient(180deg, oklch(0% 0 0 / 0.08), oklch(0% 0 0 / 0.58))",
+                "linear-gradient(180deg, oklch(0% 0 0 / 0.08), oklch(0% 0 0 / 0.62))",
             }}
             aria-hidden="true"
           />
           <div className="absolute left-5 bottom-5 flex items-center gap-3 text-left">
             <div
-              className="h-12 w-12 rounded-[14px] border bg-white flex items-center justify-center overflow-hidden shadow-[0_8px_24px_oklch(0%_0_0_/_0.18)]"
+              className="h-12 w-12 rounded-[14px] border bg-white flex items-center justify-center overflow-hidden shadow-[0_8px_24px_oklch(0%_0_0_/_0.22)]"
               style={{ borderColor: "oklch(100% 0 0 / 0.42)" }}
             >
               {logoUrl ? (
@@ -64,7 +67,7 @@ export function CallerIdle({ clinicName, tagline, tenant, onStartCall }: CallerI
               )}
             </div>
             <div className="min-w-0">
-              <p className="text-xs font-medium text-white/75">AI phone receptionist</p>
+              <p className="text-xs font-medium text-white/80">AI phone receptionist</p>
               <p className="text-lg font-semibold text-white truncate">{clinicName}</p>
             </div>
           </div>
@@ -79,8 +82,8 @@ export function CallerIdle({ clinicName, tagline, tenant, onStartCall }: CallerI
               {clinicName}
             </h1>
             <p
-              className="text-base max-w-[30ch] leading-relaxed font-medium"
-              style={{ color: "color-mix(in oklch, var(--fd-fg) 72%, var(--fd-muted))" }}
+              className="text-[0.9375rem] max-w-[30ch] leading-relaxed"
+              style={{ color: "color-mix(in oklch, var(--fd-fg) 58%, var(--fd-muted))" }}
             >
               {tagline ?? "Book an appointment by phone. The AI receptionist answers right away."}
             </p>
@@ -91,10 +94,10 @@ export function CallerIdle({ clinicName, tagline, tenant, onStartCall }: CallerI
               {services.map((service) => (
                 <span
                   key={service.name}
-                  className="px-2.5 py-1 rounded-full text-xs font-medium border"
+                  className="px-2.5 py-1 rounded-full text-xs font-medium border transition-colors duration-150"
                   style={{
                     color: "var(--fd-accent)",
-                    borderColor: "color-mix(in oklch, var(--fd-accent) 24%, transparent)",
+                    borderColor: "color-mix(in oklch, var(--fd-accent) 28%, transparent)",
                     background: "color-mix(in oklch, var(--fd-accent) 8%, var(--fd-bg))",
                   }}
                 >
@@ -110,7 +113,7 @@ export function CallerIdle({ clinicName, tagline, tenant, onStartCall }: CallerI
       <div className="flex flex-col items-center gap-4">
         <button
           onClick={onStartCall}
-          className="inline-flex items-center justify-center gap-3 min-w-[220px] h-14 px-8 text-base font-medium rounded-[var(--fd-radius)] transition-all duration-150 outline-none cursor-pointer select-none focus-visible:ring-2 focus-visible:ring-offset-2"
+          className="inline-flex items-center justify-center gap-3 min-w-[220px] h-14 px-8 text-base font-semibold transition-all duration-150 outline-none cursor-pointer select-none focus-visible:ring-2 focus-visible:ring-offset-2 hover:brightness-[1.08] active:scale-[0.97] shadow-[0_2px_8px_var(--fd-accent)_/_0.28,0_1px_2px_oklch(0%_0_0_/_0.12)]"
           style={{
             background: "var(--fd-accent)",
             color: "var(--fd-accent-fg)",
@@ -118,7 +121,7 @@ export function CallerIdle({ clinicName, tagline, tenant, onStartCall }: CallerI
           }}
           aria-label="Start a voice call"
         >
-          <Phone size={20} strokeWidth={2} aria-hidden="true" />
+          <Phone size={20} strokeWidth={2.2} aria-hidden="true" />
           Call the phone line
         </button>
         <p className="text-xs font-medium" style={{ color: "var(--fd-muted)" }}>
@@ -127,7 +130,7 @@ export function CallerIdle({ clinicName, tagline, tenant, onStartCall }: CallerI
       </div>
 
       {/* Trust footer */}
-      <div className="flex items-center gap-6 text-xs" style={{ color: "var(--fd-muted)" }}>
+      <div className="flex items-center gap-6 text-xs font-medium" style={{ color: "var(--fd-muted)" }}>
         <span>No hold time</span>
         <span
           aria-hidden="true"
