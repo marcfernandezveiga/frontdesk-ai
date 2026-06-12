@@ -1,201 +1,87 @@
 "use client";
 
 /**
- * Public caller page — /
+ * / — public landing page.
  *
- * Drives CallerPage from an ElevenLabs useConversation session.
- * Must be a Client Component because it uses browser APIs (mic, WebRTC).
+ * One value line, CTA to /onboard, example link to /c/marina-physio.
+ * Spare and confident. No decoration.
  *
- * Session strategy:
- *  1. Try GET /api/elevenlabs/token → use returned token as conversationToken (WebRTC).
- *  2. If the route returns non-2xx (no keys set), fall back to public agentId session.
- *  3. If NEXT_PUBLIC_ELEVENLABS_AGENT_ID is also missing, show a friendly no-key notice.
+ * The old caller behavior (/ drove the ElevenLabs session directly) has been
+ * replaced by multi-tenant routing. Existing deployed links to / will hit this
+ * page; a redirect to /c/marina-physio is handled in the routing layer (wave 2).
+ * For now this page is the entry point for new businesses.
  */
 
-import { useCallback, useEffect, useRef, useState } from "react";
-import { ConversationProvider, useConversation } from "@elevenlabs/react";
-import { CallerPage } from "@/components/caller/CallerPage";
-import type { CallState, SpeakerMode } from "@/components/caller/CallState";
-import type { CheckAvailabilityResult, BookAppointmentResult } from "@/lib/types";
-
-// ─── Inner component (must be inside ConversationProvider) ────────────────────
-
-function CallerInner() {
-  const agentId = process.env.NEXT_PUBLIC_ELEVENLABS_AGENT_ID ?? "";
-
-  const [callState, setCallState] = useState<CallState>("idle");
-  const [speakerMode, setSpeakerMode] = useState<SpeakerMode>("listening");
-  const [liveCaption, setLiveCaption] = useState<string | undefined>(undefined);
-  const [confirmationText, setConfirmationText] = useState<string | undefined>(undefined);
-  const [appointment, setAppointment] = useState<
-    { callerName: string; reason: string; startsAt: string; duration: number } | undefined
-  >(undefined);
-  const [errorMessage, setErrorMessage] = useState<string | undefined>(undefined);
-
-  // Accumulate transcript lines for POST /api/call-log on session end
-  const transcriptRef = useRef<string[]>([]);
-  const appointmentIdRef = useRef<string | undefined>(undefined);
-
-  const conversation = useConversation({
-    onConnect: () => {
-      setCallState("live");
-    },
-    onDisconnect: () => {
-      // If we haven't confirmed a booking, move to "ended"
-      setCallState((prev) =>
-        prev === "confirmed" ? "confirmed" : "ended"
-      );
-    },
-    onError: (message) => {
-      setErrorMessage(typeof message === "string" ? message : "Connection error.");
-      setCallState("ended");
-    },
-    onModeChange: ({ mode }) => {
-      setSpeakerMode(mode === "speaking" ? "speaking" : "listening");
-    },
-    onMessage: (event) => {
-      // Accumulate transcript lines
-      if ("message" in event && typeof event.message === "string") {
-        const role = "source" in event ? (event.source === "user" ? "Caller" : "Agent") : "Agent";
-        transcriptRef.current.push(`[${role}] ${event.message}`);
-        // Show agent speech as live caption
-        if (role === "Agent") {
-          setLiveCaption(event.message);
-        }
-      }
-    },
-    clientTools: {
-      check_availability: async (params: Record<string, unknown>) => {
-        const date = typeof params.date === "string" ? params.date : undefined;
-        const url = date
-          ? `/api/availability?date=${encodeURIComponent(date)}`
-          : "/api/availability";
-        const res = await fetch(url);
-        const data: CheckAvailabilityResult = await res.json();
-        return JSON.stringify(data);
-      },
-      book_appointment: async (params: Record<string, unknown>) => {
-        const slot_id = String(params.slot_id ?? "");
-        const caller_name = String(params.caller_name ?? "");
-        const reason = String(params.reason ?? "");
-
-        const res = await fetch("/api/book", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ slot_id, caller_name, reason }),
-        });
-        const data: BookAppointmentResult = await res.json();
-
-        if (data.ok && data.appointment_id) {
-          appointmentIdRef.current = data.appointment_id;
-          // Drive UI into confirmed state
-          setConfirmationText(data.confirmation);
-          setAppointment({
-            callerName: caller_name,
-            reason,
-            startsAt: data.starts_at ?? new Date().toISOString(),
-            duration: 30,
-          });
-          setCallState("confirmed");
-        }
-
-        return JSON.stringify(data);
-      },
-    },
-  });
-
-  // Once a booking is confirmed, let the agent deliver its closing line, then
-  // hang up automatically so it doesn't keep listening forever.
-  useEffect(() => {
-    if (callState !== "confirmed") return;
-    const t = setTimeout(() => {
-      conversation.endSession();
-    }, 4500);
-    return () => clearTimeout(t);
-  }, [callState, conversation]);
-
-  // Post transcript to /api/call-log when session ends
-  useEffect(() => {
-    if (callState === "ended" || callState === "confirmed") {
-      const transcript = transcriptRef.current.join("\n\n");
-      if (!transcript) return;
-      fetch("/api/call-log", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          transcript,
-          appointment_id: appointmentIdRef.current ?? null,
-        }),
-      }).catch((err) => console.warn("[call-log] Failed to post transcript:", err));
-    }
-  }, [callState]);
-
-  const handleStartCall = useCallback(async () => {
-    setCallState("connecting");
-    setLiveCaption(undefined);
-    setErrorMessage(undefined);
-    setConfirmationText(undefined);
-    setAppointment(undefined);
-    transcriptRef.current = [];
-    appointmentIdRef.current = undefined;
-
-    try {
-      // Attempt to get a signed conversation token from our server route
-      const tokenRes = await fetch("/api/elevenlabs/token");
-      if (tokenRes.ok) {
-        const { token } = await tokenRes.json() as { token: string };
-        conversation.startSession({ conversationToken: token });
-        return;
-      }
-    } catch {
-      // Fall through to agentId fallback
-    }
-
-    // Fallback: public session by agentId
-    if (!agentId) {
-      setErrorMessage("No ElevenLabs agent configured. Set NEXT_PUBLIC_ELEVENLABS_AGENT_ID.");
-      setCallState("ended");
-      return;
-    }
-    conversation.startSession({ agentId });
-  }, [conversation, agentId]);
-
-  const handleEndCall = useCallback(() => {
-    conversation.endSession();
-  }, [conversation]);
-
-  const handleReset = useCallback(() => {
-    conversation.endSession();
-    setCallState("idle");
-    setLiveCaption(undefined);
-    setErrorMessage(undefined);
-    setConfirmationText(undefined);
-    setAppointment(undefined);
-    transcriptRef.current = [];
-    appointmentIdRef.current = undefined;
-  }, [conversation]);
-
-  return (
-    <CallerPage
-      callState={callState}
-      speakerMode={speakerMode}
-      liveCaption={liveCaption}
-      confirmationText={confirmationText}
-      appointment={appointment}
-      errorMessage={errorMessage}
-      onStartCall={handleStartCall}
-      onEndCall={handleEndCall}
-      onReset={handleReset}
-    />
-  );
-}
-
-// ─── Page (wraps in ConversationProvider) ─────────────────────────────────────
+import Link from "next/link";
+import { Phone, ArrowRight } from "lucide-react";
 
 export default function Home() {
   return (
-    <ConversationProvider>
-      <CallerInner />
-    </ConversationProvider>
+    <div className="min-h-dvh flex flex-col bg-white">
+      {/* Header */}
+      <header className="flex items-center justify-between px-6 py-5 border-b border-[oklch(88%_0.004_264)]">
+        <div className="flex items-center gap-2.5">
+          <div className="w-6 h-6 rounded-[4px] bg-[oklch(9%_0_0)] flex items-center justify-center">
+            <span className="text-[10px] font-bold text-white leading-none" aria-hidden="true">
+              FD
+            </span>
+          </div>
+          <span className="text-sm font-semibold text-[oklch(9%_0_0)]">Frontdesk</span>
+        </div>
+        <Link
+          href="/c/marina-physio"
+          className="text-xs text-[oklch(60%_0.006_264)] hover:text-[oklch(40%_0.005_264)] transition-colors duration-150"
+        >
+          See a live example
+        </Link>
+      </header>
+
+      {/* Hero */}
+      <main
+        className="flex flex-1 items-center justify-center px-6 py-20"
+        id="main-content"
+      >
+        <div className="w-full max-w-lg text-center">
+          {/* Value line */}
+          <h1
+            className="text-4xl sm:text-5xl font-semibold tracking-[-0.03em] leading-[1.1] text-[oklch(9%_0_0)] mb-5"
+            style={{ textWrap: "balance" } as React.CSSProperties}
+          >
+            An AI receptionist for your business, ready in 20 seconds
+          </h1>
+
+          <p
+            className="text-base text-[oklch(40%_0.005_264)] leading-relaxed mb-10 max-w-[44ch] mx-auto"
+          >
+            Paste your website URL. We read your brand, write your greeting, and give you a shareable call link your customers can use right now.
+          </p>
+
+          {/* CTAs */}
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
+            <Link
+              href="/onboard"
+              className="inline-flex items-center justify-center gap-2.5 h-12 px-7 text-sm font-medium rounded-[6px] bg-[oklch(9%_0_0)] text-white transition-all duration-150 hover:bg-[oklch(20%_0_0)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[oklch(48%_0.2_264)] focus-visible:ring-offset-2"
+            >
+              Set up your receptionist
+              <ArrowRight size={15} aria-hidden="true" />
+            </Link>
+            <Link
+              href="/c/marina-physio"
+              className="inline-flex items-center justify-center gap-2 h-12 px-6 text-sm font-medium rounded-[6px] border border-[oklch(88%_0.004_264)] text-[oklch(9%_0_0)] bg-white transition-all duration-150 hover:bg-[oklch(97.5%_0.002_264)] hover:border-[oklch(78%_0.005_264)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[oklch(48%_0.2_264)] focus-visible:ring-offset-2"
+            >
+              <Phone size={14} aria-hidden="true" />
+              See a live example
+            </Link>
+          </div>
+        </div>
+      </main>
+
+      {/* Footer */}
+      <footer className="px-6 pb-8 flex justify-center">
+        <p className="text-xs text-[oklch(60%_0.006_264)]">
+          Frontdesk · AI receptionists for local businesses
+        </p>
+      </footer>
+    </div>
   );
 }

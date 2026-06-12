@@ -1,6 +1,7 @@
 import { BUSINESS_ID } from "@/lib/types";
 import type { Slot, Appointment, BookAppointmentArgs, BookAppointmentResult } from "@/lib/types";
 import { hasSupabaseEnv, createServiceClient } from "@/lib/supabase";
+import { NextRequest } from "next/server";
 
 // ---------------------------------------------------------------------------
 // Helpers
@@ -34,11 +35,11 @@ const mockBookedIds = new Set<string>();
 // Route handler
 // ---------------------------------------------------------------------------
 
-export async function POST(request: Request) {
-  let body: BookAppointmentArgs;
+export async function POST(request: NextRequest) {
+  let body: BookAppointmentArgs & { business?: string };
 
   try {
-    body = (await request.json()) as BookAppointmentArgs;
+    body = (await request.json()) as BookAppointmentArgs & { business?: string };
   } catch {
     const result: BookAppointmentResult = {
       ok: false,
@@ -48,6 +49,9 @@ export async function POST(request: Request) {
   }
 
   const { slot_id, caller_name, reason } = body;
+  // Support ?business= query param AND body.business field
+  const businessId =
+    request.nextUrl.searchParams.get("business") ?? body.business ?? BUSINESS_ID;
 
   if (!slot_id || !caller_name) {
     const result: BookAppointmentResult = {
@@ -84,7 +88,7 @@ export async function POST(request: Request) {
       .from("slots")
       .select("id, starts_at, is_booked, business_id")
       .eq("id", slot_id)
-      .eq("business_id", BUSINESS_ID)
+      .eq("business_id", businessId)
       .single();
 
     const slot = slotData as Pick<Slot, "id" | "starts_at" | "is_booked" | "business_id"> | null;
@@ -123,7 +127,7 @@ export async function POST(request: Request) {
 
     // Create the appointment record.
     const insertPayload: Omit<Appointment, "id" | "created_at"> = {
-      business_id: BUSINESS_ID,
+      business_id: businessId,
       slot_id: slot.id,
       caller_name,
       reason: reason ?? "",

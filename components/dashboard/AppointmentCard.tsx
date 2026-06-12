@@ -1,6 +1,6 @@
 "use client";
 
-import { ChevronRight, Clock, User, MessageSquare } from "lucide-react";
+import { ChevronRight, Clock, MessageSquare } from "lucide-react";
 import { AppointmentStatusBadge } from "@/components/ui/Badge";
 import type { AppointmentCardProps } from "./DashboardTypes";
 
@@ -37,23 +37,25 @@ export function AppointmentCard({
   return (
     <button
       onClick={onClick}
-      className={`
-        w-full text-left px-4 py-4 rounded-[6px] border
-        transition-all duration-150 outline-none group
-        focus-visible:ring-2 focus-visible:ring-[oklch(48%_0.2_264)] focus-visible:ring-offset-1
-        ${
-          isActive
-            ? "bg-[oklch(48%_0.2_264_/_0.06)] border-[oklch(48%_0.2_264_/_0.3)]"
-            : "bg-white border-[oklch(88%_0.004_264)] hover:border-[oklch(78%_0.005_264)] hover:bg-[oklch(98.5%_0.002_264)]"
-        }
-      `}
+      className="w-full text-left px-4 py-4 rounded-[6px] border transition-all duration-150 outline-none group"
+      style={
+        isActive
+          ? {
+              background: "color-mix(in oklch, var(--fd-accent, oklch(48% 0.2 264)) 6%, transparent)",
+              borderColor: "color-mix(in oklch, var(--fd-accent, oklch(48% 0.2 264)) 30%, transparent)",
+            }
+          : {
+              background: "white",
+              borderColor: "oklch(88% 0.004 264)",
+            }
+      }
       aria-pressed={isActive}
       aria-label={`Appointment: ${appointment.caller_name}, ${date} at ${time}`}
     >
       <div className="flex items-start gap-3">
         {/* Avatar */}
         <div
-          className="w-8 h-8 rounded-full bg-[oklch(94%_0.003_264)] flex items-center justify-center flex-shrink-0 mt-0.5"
+          className="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5 bg-[oklch(94%_0.003_264)]"
           aria-hidden="true"
         >
           <span className="text-xs font-semibold text-[oklch(40%_0.005_264)]">
@@ -72,10 +74,12 @@ export function AppointmentCard({
             </div>
             <ChevronRight
               size={14}
-              className={`
-                flex-shrink-0 transition-colors duration-150
-                ${isActive ? "text-[oklch(48%_0.2_264)]" : "text-[oklch(78%_0.005_264)] group-hover:text-[oklch(60%_0.006_264)]"}
-              `}
+              className="flex-shrink-0 transition-colors duration-150"
+              style={{
+                color: isActive
+                  ? "var(--fd-accent, oklch(48% 0.2 264))"
+                  : "oklch(78% 0.005 264)",
+              }}
               aria-hidden="true"
             />
           </div>
@@ -92,7 +96,10 @@ export function AppointmentCard({
               {date} · {time}
             </span>
             {hasTranscript && (
-              <span className="inline-flex items-center gap-1 text-xs text-[oklch(48%_0.2_264)]">
+              <span
+                className="inline-flex items-center gap-1 text-xs"
+                style={{ color: "var(--fd-accent, oklch(48% 0.2 264))" }}
+              >
                 <MessageSquare size={11} aria-hidden="true" />
                 Transcript
               </span>

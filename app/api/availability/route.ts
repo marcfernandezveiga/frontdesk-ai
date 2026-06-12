@@ -4,6 +4,14 @@ import type { Slot, CheckAvailabilityResult } from "@/lib/types";
 import { hasSupabaseEnv, createServiceClient } from "@/lib/supabase";
 
 // ---------------------------------------------------------------------------
+// Business scoping helper
+// ---------------------------------------------------------------------------
+
+function getBusinessId(searchParams: URLSearchParams): string {
+  return searchParams.get("business") ?? BUSINESS_ID;
+}
+
+// ---------------------------------------------------------------------------
 // Helpers
 // ---------------------------------------------------------------------------
 
@@ -54,6 +62,7 @@ const MOCK_SLOTS: CheckAvailabilityResult["slots"] = [
 export async function GET(request: NextRequest) {
   const { searchParams } = request.nextUrl;
   const dateParam = searchParams.get("date");
+  const businessId = getBusinessId(searchParams);
 
   if (!hasSupabaseEnv) {
     const payload: CheckAvailabilityResult = { slots: MOCK_SLOTS };
@@ -67,7 +76,7 @@ export async function GET(request: NextRequest) {
     let baseQuery = supabase
       .from("slots")
       .select("id, starts_at")
-      .eq("business_id", BUSINESS_ID)
+      .eq("business_id", businessId)
       .eq("is_booked", false)
       .gt("starts_at", new Date().toISOString())
       .order("starts_at", { ascending: true })

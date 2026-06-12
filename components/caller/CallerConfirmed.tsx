@@ -1,7 +1,6 @@
 "use client";
 
 import { CheckCircle, Calendar, Clock, User, RefreshCw } from "lucide-react";
-import { Button } from "@/components/ui/Button";
 
 interface AppointmentDetail {
   callerName: string;
@@ -45,20 +44,29 @@ export function CallerConfirmed({
     >
       {/* Success icon */}
       <div className="flex flex-col items-center gap-4">
-        <div className="w-16 h-16 rounded-full bg-[oklch(53%_0.16_145_/_0.1)] flex items-center justify-center">
+        <div
+          className="w-16 h-16 rounded-full flex items-center justify-center"
+          style={{ background: "oklch(53% 0.16 145 / 0.1)" }}
+        >
           <CheckCircle
             size={32}
             strokeWidth={1.5}
-            className="text-[oklch(40%_0.16_145)]"
+            style={{ color: "oklch(40% 0.16 145)" }}
             aria-hidden="true"
           />
         </div>
         <div className="flex flex-col gap-1.5">
-          <h2 className="text-xl font-semibold tracking-tight text-[oklch(9%_0_0)]">
+          <h2
+            className="text-xl font-semibold tracking-tight"
+            style={{ color: "var(--fd-fg)" }}
+          >
             Appointment booked
           </h2>
           {confirmationText && (
-            <p className="text-sm text-[oklch(40%_0.005_264)] max-w-[30ch] leading-relaxed">
+            <p
+              className="text-sm max-w-[30ch] leading-relaxed"
+              style={{ color: "var(--fd-muted)" }}
+            >
               {confirmationText}
             </p>
           )}
@@ -67,7 +75,13 @@ export function CallerConfirmed({
 
       {/* Appointment card */}
       {appointment && formatted && (
-        <div className="w-full max-w-xs border border-[oklch(88%_0.004_264)] rounded-[8px] p-5 text-left bg-[oklch(98.5%_0.002_264)]">
+        <div
+          className="w-full max-w-xs rounded-[8px] p-5 text-left"
+          style={{
+            border: "1px solid var(--fd-border)",
+            background: "color-mix(in oklch, var(--fd-bg) 95%, var(--fd-fg) 5%)",
+          }}
+        >
           <div className="flex flex-col gap-3">
             <Row
               icon={<User size={14} aria-hidden="true" />}
@@ -91,10 +105,7 @@ export function CallerConfirmed({
                 <Divider />
                 <Row
                   icon={
-                    <span
-                      className="w-3.5 h-3.5 flex items-center justify-center text-[oklch(40%_0.005_264)]"
-                      aria-hidden="true"
-                    >
+                    <span className="w-3.5 h-3.5 flex items-center justify-center" aria-hidden="true">
                       ✦
                     </span>
                   }
@@ -107,10 +118,18 @@ export function CallerConfirmed({
         </div>
       )}
 
-      <Button variant="secondary" size="sm" onClick={onReset} className="gap-2">
+      <button
+        onClick={onReset}
+        className="inline-flex items-center justify-center gap-2 h-8 px-3 text-sm font-medium rounded-[6px] border transition-colors duration-150 outline-none cursor-pointer"
+        style={{
+          color: "var(--fd-fg)",
+          borderColor: "var(--fd-border)",
+          background: "transparent",
+        }}
+      >
         <RefreshCw size={14} aria-hidden="true" />
         Call again
-      </Button>
+      </button>
     </div>
   );
 }
@@ -126,10 +145,23 @@ function Row({
 }) {
   return (
     <div className="flex items-start gap-3">
-      <span className="mt-0.5 text-[oklch(60%_0.006_264)] flex-shrink-0">{icon}</span>
+      <span
+        className="mt-0.5 flex-shrink-0"
+        style={{ color: "var(--fd-muted)" }}
+      >
+        {icon}
+      </span>
       <div className="flex flex-col gap-0.5 min-w-0">
-        <span className="text-xs text-[oklch(60%_0.006_264)] font-medium">{label}</span>
-        <span className="text-sm text-[oklch(9%_0_0)] font-medium leading-snug">
+        <span
+          className="text-xs font-medium"
+          style={{ color: "var(--fd-muted)" }}
+        >
+          {label}
+        </span>
+        <span
+          className="text-sm font-medium leading-snug"
+          style={{ color: "var(--fd-fg)" }}
+        >
           {value}
         </span>
       </div>
@@ -138,5 +170,5 @@ function Row({
 }
 
 function Divider() {
-  return <hr className="border-[oklch(88%_0.004_264)]" />;
+  return <hr style={{ borderColor: "var(--fd-border)" }} />;
 }

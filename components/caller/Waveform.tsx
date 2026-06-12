@@ -27,13 +27,19 @@ export function Waveform({ speakerMode, isActive }: WaveformProps) {
       {speakerMode === "speaking" && isActive && (
         <>
           <span
-            className="absolute inset-0 rounded-full bg-[oklch(48%_0.2_264_/_0.15)]"
-            style={{ animation: "pulse-ring 1.5s ease-out infinite" }}
+            className="absolute inset-0 rounded-full"
+            style={{
+              background: "color-mix(in oklch, var(--fd-accent) 15%, transparent)",
+              animation: "pulse-ring 1.5s ease-out infinite",
+            }}
             aria-hidden="true"
           />
           <span
-            className="absolute inset-0 rounded-full bg-[oklch(48%_0.2_264_/_0.1)]"
-            style={{ animation: "pulse-ring 1.5s ease-out 0.5s infinite" }}
+            className="absolute inset-0 rounded-full"
+            style={{
+              background: "color-mix(in oklch, var(--fd-accent) 10%, transparent)",
+              animation: "pulse-ring 1.5s ease-out 0.5s infinite",
+            }}
             aria-hidden="true"
           />
         </>
@@ -43,10 +49,7 @@ export function Waveform({ speakerMode, isActive }: WaveformProps) {
       <div
         className="relative z-10 w-24 h-24 rounded-full flex items-center justify-center"
         style={{
-          background:
-            speakerMode === "speaking"
-              ? "oklch(48% 0.2 264)"
-              : "oklch(9% 0 0)",
+          background: speakerMode === "speaking" ? "var(--fd-accent)" : "var(--fd-fg)",
           animation: isActive ? "orb-breathe 2s ease-in-out infinite" : "none",
           transition: "background 300ms ease-out",
         }}

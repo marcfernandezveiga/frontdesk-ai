@@ -3,8 +3,10 @@
  * Wave 2 drives these states from the ElevenLabs useConversation hook.
  */
 
+import type { TenantConfig } from "@/lib/tenant";
+
 export type CallState =
-  | "idle"        // Before the call. Big "Call the clinic" CTA.
+  | "idle"        // Before the call. Big "Call" CTA.
   | "connecting"  // WebRTC session establishing. Mic permission, agent loading.
   | "live"        // Session active. Waveform, captions, speaking indicator.
   | "ended"       // Call finished. May or may not have a confirmation.
@@ -37,7 +39,7 @@ export interface CallerPageProps {
 
   /**
    * Booking confirmation line returned from POST /api/book
-   * e.g. "Confirmed! Thursday 2:00 PM with Marina Physio."
+   * e.g. "Confirmed. Thursday 2:00 PM at Marina Physio."
    * Shown in "confirmed" state.
    */
   confirmationText?: string;
@@ -59,7 +61,7 @@ export interface CallerPageProps {
   errorMessage?: string;
 
   /**
-   * Callback: user pressed "Call the clinic" in idle state.
+   * Callback: user pressed "Call" in idle state.
    */
   onStartCall?: () => void;
 
@@ -72,4 +74,12 @@ export interface CallerPageProps {
    * Callback: user pressed "Call again" after ended/confirmed state.
    */
   onReset?: () => void;
+
+  /**
+   * Tenant configuration. When set, the caller page shows the tenant's
+   * name, tagline, and logo. The parent component is responsible for applying
+   * theme CSS variables via themeToCssVars() on a wrapper element.
+   * Optional: omit to show the default Frontdesk look.
+   */
+  tenant?: TenantConfig;
 }

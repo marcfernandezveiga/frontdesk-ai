@@ -2,7 +2,6 @@
 
 import { PhoneOff } from "lucide-react";
 import { Waveform } from "./Waveform";
-import { Button } from "@/components/ui/Button";
 import type { SpeakerMode } from "./CallState";
 
 interface CallerLiveProps {
@@ -16,7 +15,7 @@ export function CallerLive({ speakerMode, liveCaption, onEndCall }: CallerLivePr
   const speakerSub =
     speakerMode === "speaking"
       ? "The receptionist is responding"
-      : "Speak now — the agent is listening";
+      : "Speak now. The agent is listening.";
 
   return (
     <div
@@ -25,24 +24,27 @@ export function CallerLive({ speakerMode, liveCaption, onEndCall }: CallerLivePr
     >
       {/* Status pill */}
       <div
-        className={`
-          inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-medium
-          border transition-colors duration-300
-          ${
-            speakerMode === "speaking"
-              ? "bg-[oklch(48%_0.2_264_/_0.08)] border-[oklch(48%_0.2_264_/_0.2)] text-[oklch(38%_0.2_264)]"
-              : "bg-[oklch(97.5%_0.002_264)] border-[oklch(88%_0.004_264)] text-[oklch(40%_0.005_264)]"
-          }
-        `}
+        className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-medium border transition-colors duration-300"
+        style={
+          speakerMode === "speaking"
+            ? {
+                background: "color-mix(in oklch, var(--fd-accent) 10%, transparent)",
+                borderColor: "color-mix(in oklch, var(--fd-accent) 25%, transparent)",
+                color: "var(--fd-accent)",
+              }
+            : {
+                background: "var(--fd-bg)",
+                borderColor: "var(--fd-border)",
+                color: "var(--fd-muted)",
+              }
+        }
         aria-live="polite"
         aria-atomic="true"
       >
         <span
-          className={`
-            w-1.5 h-1.5 rounded-full transition-colors duration-300
-            ${speakerMode === "speaking" ? "bg-[oklch(48%_0.2_264)]" : "bg-[oklch(53%_0.16_145)]"}
-          `}
+          className="w-1.5 h-1.5 rounded-full transition-colors duration-300"
           style={{
+            background: speakerMode === "speaking" ? "var(--fd-accent)" : "oklch(53% 0.16 145)",
             animation:
               speakerMode === "speaking"
                 ? "live-pulse 1.2s ease-in-out infinite"
@@ -58,7 +60,8 @@ export function CallerLive({ speakerMode, liveCaption, onEndCall }: CallerLivePr
 
       {/* Sub-label */}
       <p
-        className="text-sm text-[oklch(40%_0.005_264)] transition-opacity duration-200"
+        className="text-sm transition-opacity duration-200"
+        style={{ color: "var(--fd-muted)" }}
         aria-live="polite"
       >
         {speakerSub}
@@ -72,13 +75,13 @@ export function CallerLive({ speakerMode, liveCaption, onEndCall }: CallerLivePr
       >
         {liveCaption ? (
           <p
-            className="text-sm leading-relaxed text-[oklch(20%_0.003_264)] font-medium"
-            style={{ textWrap: "pretty" }}
+            className="text-sm leading-relaxed font-medium"
+            style={{ color: "var(--fd-fg)", textWrap: "pretty" } as React.CSSProperties}
           >
             &ldquo;{liveCaption}&rdquo;
           </p>
         ) : (
-          <p className="text-sm text-[oklch(60%_0.006_264)] italic">
+          <p className="text-sm italic" style={{ color: "var(--fd-muted)" }}>
             Captions will appear here
           </p>
         )}
@@ -87,13 +90,10 @@ export function CallerLive({ speakerMode, liveCaption, onEndCall }: CallerLivePr
       {/* End call */}
       <button
         onClick={onEndCall}
-        className="
-          flex items-center justify-center w-14 h-14 rounded-full
-          bg-[oklch(57%_0.22_25)] text-white
-          hover:bg-[oklch(50%_0.22_25)]
-          focus-visible:ring-2 focus-visible:ring-[oklch(57%_0.22_25)] focus-visible:ring-offset-2
-          transition-colors duration-150 outline-none cursor-pointer
-        "
+        className="flex items-center justify-center w-14 h-14 rounded-full text-white transition-colors duration-150 outline-none cursor-pointer focus-visible:ring-2 focus-visible:ring-offset-2"
+        style={{
+          background: "oklch(57% 0.22 25)",
+        }}
         aria-label="End call"
         title="End call"
       >

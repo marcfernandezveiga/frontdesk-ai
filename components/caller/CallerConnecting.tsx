@@ -1,7 +1,5 @@
 "use client";
 
-import { Button } from "@/components/ui/Button";
-
 interface CallerConnectingProps {
   onCancel?: () => void;
 }
@@ -16,34 +14,43 @@ export function CallerConnecting({ onCancel }: CallerConnectingProps) {
       <div className="relative w-24 h-24 flex items-center justify-center">
         {/* Outer ring */}
         <span
-          className="absolute inset-0 rounded-full border-2 border-[oklch(88%_0.004_264)]"
+          className="absolute inset-0 rounded-full border-2"
+          style={{ borderColor: "var(--fd-border)" }}
           aria-hidden="true"
         />
         {/* Spinning arc */}
         <span
-          className="absolute inset-[3px] rounded-full border-2 border-transparent border-t-[oklch(9%_0_0)]"
-          style={{ animation: "spinner 0.9s linear infinite" }}
+          className="absolute inset-[3px] rounded-full border-2 border-transparent"
+          style={{
+            borderTopColor: "var(--fd-accent)",
+            animation: "spinner 0.9s linear infinite",
+          }}
           aria-hidden="true"
         />
         {/* Inner dot */}
         <span
-          className="w-2 h-2 rounded-full bg-[oklch(9%_0_0)]"
+          className="w-2 h-2 rounded-full"
+          style={{ background: "var(--fd-accent)" }}
           aria-hidden="true"
         />
       </div>
 
       <div className="flex flex-col gap-2">
-        <p className="text-lg font-medium text-[oklch(9%_0_0)] tracking-tight">
+        <p className="text-lg font-medium tracking-tight" style={{ color: "var(--fd-fg)" }}>
           Connecting
         </p>
-        <p className="text-sm text-[oklch(40%_0.005_264)]">
+        <p className="text-sm" style={{ color: "var(--fd-muted)" }}>
           Requesting microphone and reaching the agent&hellip;
         </p>
       </div>
 
-      <Button variant="ghost" size="sm" onClick={onCancel}>
+      <button
+        onClick={onCancel}
+        className="inline-flex items-center justify-center h-8 px-3 text-sm font-medium rounded-[6px] transition-colors duration-150 outline-none cursor-pointer"
+        style={{ color: "var(--fd-muted)" }}
+      >
         Cancel
-      </Button>
+      </button>
     </div>
   );
 }

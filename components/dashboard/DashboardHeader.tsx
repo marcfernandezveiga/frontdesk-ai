@@ -12,18 +12,22 @@ export function DashboardHeader({
       <div className="flex items-center gap-3">
         {/* Wordmark */}
         <div className="flex items-center gap-2.5">
-          <div className="w-6 h-6 rounded-[4px] bg-[oklch(9%_0_0)] flex items-center justify-center">
-            <span className="text-[10px] font-bold text-white leading-none" aria-hidden="true">
+          <div
+            className="w-6 h-6 rounded-[4px] flex items-center justify-center"
+            style={{ background: "var(--fd-fg, oklch(9% 0 0))" }}
+          >
+            <span
+              className="text-[10px] font-bold leading-none"
+              style={{ color: "var(--fd-bg, #ffffff)" }}
+              aria-hidden="true"
+            >
               FD
             </span>
           </div>
           <span className="text-sm font-semibold text-[oklch(9%_0_0)]">Frontdesk</span>
         </div>
         {/* Separator */}
-        <span
-          className="w-px h-4 bg-[oklch(88%_0.004_264)]"
-          aria-hidden="true"
-        />
+        <span className="w-px h-4 bg-[oklch(88%_0.004_264)]" aria-hidden="true" />
         {/* Clinic name */}
         <span className="text-sm text-[oklch(40%_0.005_264)]">{clinicName}</span>
       </div>

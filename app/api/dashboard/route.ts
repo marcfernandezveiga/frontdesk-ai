@@ -17,6 +17,7 @@
 import { BUSINESS_ID } from "@/lib/types";
 import type { Appointment, CallLog, Slot } from "@/lib/types";
 import { hasSupabaseEnv, createServiceClient } from "@/lib/supabase";
+import { NextRequest } from "next/server";
 
 // ─── DTO ─────────────────────────────────────────────────────────────────────
 
@@ -144,7 +145,9 @@ const MOCK_SLOTS: AvailabilitySlotDTO[] = [
 
 // ─── Route handler ────────────────────────────────────────────────────────────
 
-export async function GET() {
+export async function GET(request: NextRequest) {
+  const businessId = request.nextUrl.searchParams.get("business") ?? BUSINESS_ID;
+
   if (!hasSupabaseEnv) {
     const payload: DashboardPayload = {
       appointments: MOCK_APPOINTMENTS,
@@ -164,19 +167,19 @@ export async function GET() {
       supabase
         .from("appointments")
         .select("*")
-        .eq("business_id", BUSINESS_ID)
+        .eq("business_id", businessId)
         .order("starts_at", { ascending: false })
         .limit(50),
       supabase
         .from("call_logs")
         .select("*")
-        .eq("business_id", BUSINESS_ID)
+        .eq("business_id", businessId)
         .order("created_at", { ascending: false })
         .limit(50),
       supabase
         .from("slots")
         .select("*")
-        .eq("business_id", BUSINESS_ID)
+        .eq("business_id", businessId)
         .eq("is_booked", false)
         .gt("starts_at", now)
         .order("starts_at", { ascending: true })
