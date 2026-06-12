@@ -1,7 +1,7 @@
 /**
  * POST /api/onboard
  * Body: { url: string, description: string }
- * Returns: a draft TenantConfig (slug is empty — assigned on publish)
+ * Returns: a draft TenantConfig (slug is empty, assigned on publish)
  *
  * Never throws to the client. Any failure returns a usable draft on DEFAULT_THEME.
  */
@@ -37,7 +37,7 @@ export async function POST(request: NextRequest) {
     const draft = await extractBrand({ url: normalisedUrl, description });
     return Response.json(draft);
   } catch (err) {
-    // Absolute last-resort fallback — should not reach here because extractBrand never throws.
+    // Absolute last-resort fallback. Should not reach here because extractBrand never throws.
     console.error("[onboard] Unexpected error:", err);
     const fallback: TenantConfig = {
       slug: "",

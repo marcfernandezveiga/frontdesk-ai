@@ -7,7 +7,7 @@ import { OnboardingPublished } from "./OnboardingPublished";
 import type { OnboardingFlowProps } from "./OnboardingTypes";
 
 /**
- * OnboardingFlow — top-level container.
+ * OnboardingFlow: top-level container.
  *
  * Presentational: all state and callbacks come from props.
  * Wave 2 wires these to real API calls in app/onboard/page.tsx.

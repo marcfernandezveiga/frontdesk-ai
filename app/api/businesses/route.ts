@@ -1,6 +1,6 @@
 /**
  * POST /api/businesses
- * Body: TenantConfig (slug may be empty — we assign one from name)
+ * Body: TenantConfig (slug may be empty, we assign one from name)
  * Returns: { slug: string }
  *
  * Upserts the business row and seeds availability slots from hours for the next 7 days.

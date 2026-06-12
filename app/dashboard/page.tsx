@@ -1,7 +1,7 @@
 "use client";
 
 /**
- * Owner dashboard — /dashboard
+ * Owner dashboard: /dashboard
  *
  * Auth0-gated in production. Dev-mode bypass when AUTH0_DOMAIN is absent.
  * Polls GET /api/dashboard every 1500 ms and drives DashboardPage.
@@ -37,7 +37,7 @@ export default function DashboardPageRoute() {
         return json.appointments[0]?.id ?? null;
       });
     } catch {
-      // Swallow — keep showing stale data
+      // Swallow and keep showing stale data.
     } finally {
       setLoading(false);
     }

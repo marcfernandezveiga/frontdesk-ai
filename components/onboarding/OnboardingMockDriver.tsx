@@ -18,7 +18,7 @@ import { DEFAULT_THEME } from "@/lib/tenant";
 import type { OnboardingStep, ExtractionPhase } from "./OnboardingTypes";
 import type { TenantConfig } from "@/lib/tenant";
 
-// ─── Mock tenant — simulates a brand extracted from a physio site ─────────────
+// Mock tenant: simulates a brand extracted from a physio site.
 
 const MOCK_DRAFT: TenantConfig = {
   slug: "demo-preview",

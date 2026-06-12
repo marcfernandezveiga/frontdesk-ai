@@ -17,7 +17,7 @@ export async function GET() {
 
   if (!apiKey || !agentId) {
     return Response.json(
-      { error: "ElevenLabs env vars not set — use public agentId fallback" },
+      { error: "ElevenLabs env vars not set, use public agentId fallback" },
       { status: 503 }
     );
   }

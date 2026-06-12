@@ -1,4 +1,4 @@
-// Shared domain types — the contract both backend and frontend build against.
+// Shared domain types: the contract both backend and frontend build against.
 
 export const BUSINESS_ID = "marina-physio";
 export const BUSINESS_NAME = "Marina Physio";

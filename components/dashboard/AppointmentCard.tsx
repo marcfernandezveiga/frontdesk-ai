@@ -106,7 +106,7 @@ export function AppointmentCard({
             )}
           </div>
 
-          {/* AI summary — shown inline when not expanded */}
+          {/* AI summary shown inline when not expanded */}
           {callLog?.summary && !isActive && (
             <p className="mt-2 text-xs text-[oklch(50%_0.006_264)] italic leading-relaxed line-clamp-2">
               &ldquo;{callLog.summary}&rdquo;

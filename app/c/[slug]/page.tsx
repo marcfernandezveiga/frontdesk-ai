@@ -1,7 +1,7 @@
 "use client";
 
 /**
- * /c/[slug] — branded caller page for a tenant.
+ * /c/[slug]: branded caller page for a tenant.
  *
  * Fetches GET /api/businesses/[slug] to get TenantConfig, then drives a full
  * ElevenLabs ConvAI session with per-tenant prompt + greeting overrides.

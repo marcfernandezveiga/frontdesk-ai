@@ -11,24 +11,24 @@ export type { CallerPageProps } from "./CallState";
 export type { CallState, SpeakerMode } from "./CallState";
 
 /**
- * CallerPage — the public caller surface.
+ * CallerPage: the public caller surface.
  *
  * Styled via CSS variables so any tenant theme can override the brand look.
  * The variables are set on a wrapper element by the tenant page via
  * themeToCssVars(). The default values (Vercel look) live in globals.css :root.
  *
  * Wave 2 wiring props:
- *   callState        — drive from ElevenLabs session status
- *   speakerMode      — "listening" | "speaking"
- *   liveCaption      — streamed agent transcript text
- *   confirmationText — POST /api/book confirmation string
- *   appointment      — booking detail object
- *   errorMessage     — surface on ended state without booking
- *   onStartCall      — user presses "Call"
- *   onEndCall        — user presses end-call
- *   onReset          — user presses "Call again"
+ *   callState        - drive from ElevenLabs session status
+ *   speakerMode      - "listening" | "speaking"
+ *   liveCaption      - streamed agent transcript text
+ *   confirmationText - POST /api/book confirmation string
+ *   appointment      - booking detail object
+ *   errorMessage     - surface on ended state without booking
+ *   onStartCall      - user presses "Call"
+ *   onEndCall        - user presses end-call
+ *   onReset          - user presses "Call again"
  *
- *   tenant           — optional TenantConfig for branded copy (name, tagline)
+ *   tenant           - optional TenantConfig for branded copy (name, tagline)
  */
 export function CallerPage({
   callState = "idle",

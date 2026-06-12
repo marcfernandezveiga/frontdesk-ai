@@ -37,7 +37,7 @@ export function hasLLM(): boolean {
 
 /**
  * Returns a text-capable language model for the configured provider.
- * Throws if no provider is configured — check hasLLM() first.
+ * Throws if no provider is configured. Check hasLLM() first.
  */
 export function getModel(): AnyModel {
   switch (PROVIDER) {

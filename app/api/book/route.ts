@@ -159,7 +159,7 @@ export async function POST(request: NextRequest) {
       return Response.json(result, { status: 500 });
     }
 
-    // Suppress unused variable warning — updatedCount is used as a side-effect guard above.
+    // Suppress unused variable warning. updatedCount is used as a side-effect guard above.
     void updatedCount;
 
     const when = toConfirmationTime(slot.starts_at);

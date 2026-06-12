@@ -1,7 +1,7 @@
 "use client";
 
 /**
- * / — public landing page.
+ * /: public landing page.
  *
  * One value line, CTA to /onboard, example link to /c/marina-physio.
  * Spare and confident. No decoration.

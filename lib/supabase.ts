@@ -4,7 +4,7 @@ import { cookies } from "next/headers";
 import type { Slot, Appointment, CallLog } from "./types";
 
 // ---------------------------------------------------------------------------
-// Database generic — one place to add table typings
+// Database generic: one place to add table typings
 // ---------------------------------------------------------------------------
 
 export type Database = {
@@ -87,7 +87,7 @@ export async function createServerSupabaseClient() {
 }
 
 // ---------------------------------------------------------------------------
-// Service-role client (server-only, bypasses RLS — for trusted API routes)
+// Service-role client (server-only, bypasses RLS for trusted API routes)
 // ---------------------------------------------------------------------------
 
 export function createServiceClient() {

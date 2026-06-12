@@ -1,7 +1,7 @@
 "use client";
 
 /**
- * /b/[slug] — tenant dashboard.
+ * /b/[slug]: tenant dashboard.
  *
  * Polls GET /api/dashboard?business=<slug> every 1500 ms and drives DashboardPage.
  * Light tenant theming via themeToCssVars on the outer wrapper.

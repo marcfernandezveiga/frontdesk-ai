@@ -9,7 +9,7 @@ interface WaveformProps {
 
 const BAR_COUNT = 12;
 
-// Static height multipliers — designed to look natural at rest
+// Static height multipliers designed to look natural at rest.
 const BAR_HEIGHTS = [0.3, 0.6, 0.9, 0.5, 0.8, 1.0, 0.7, 0.9, 0.4, 0.7, 0.5, 0.3];
 
 export function Waveform({ speakerMode, isActive }: WaveformProps) {
@@ -23,7 +23,7 @@ export function Waveform({ speakerMode, isActive }: WaveformProps) {
           : "Listening to you"
       }
     >
-      {/* Pulse ring — only when agent is speaking */}
+      {/* Pulse ring only appears when the agent is speaking */}
       {speakerMode === "speaking" && isActive && (
         <>
           <span

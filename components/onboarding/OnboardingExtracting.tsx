@@ -43,7 +43,7 @@ export function OnboardingExtracting({
           aria-label="Extraction progress"
         />
 
-        {/* Scan lines — decorative, shows we're "reading" the site */}
+        {/* Scan lines show that we are reading the site */}
         {!error && (
           <div
             className="absolute inset-0 pointer-events-none overflow-hidden rounded-[8px]"

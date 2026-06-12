@@ -25,7 +25,7 @@ export async function POST(request: NextRequest) {
     return Response.json({ error: "transcript is required" }, { status: 400 });
   }
 
-  // Generate AI summary (best-effort — don't let it block the save).
+  // Generate AI summary best-effort. Do not let it block the save.
   let summary: string | null = null;
   try {
     if (process.env.AI_GATEWAY_API_KEY) {

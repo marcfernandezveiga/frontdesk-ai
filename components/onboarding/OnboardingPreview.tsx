@@ -313,14 +313,14 @@ export function OnboardingPreview({
               </div>
             </div>
 
-            {/* Scaled CallerPage preview — max-height to keep it screen-contained */}
+            {/* Scaled CallerPage preview, max-height keeps it screen-contained */}
             <div
               className="relative overflow-hidden"
               style={{ maxHeight: "600px" }}
               aria-label={`Preview of ${draft.name || "your"} caller page`}
               role="region"
             >
-              {/* Scale wrapper — makes the full CallerPage fit in the preview pane */}
+              {/* Scale wrapper makes the full CallerPage fit in the preview pane */}
               <div
                 style={{
                   transform: "scale(0.75)",

@@ -84,7 +84,7 @@ const MOCK_APPOINTMENTS: Appointment[] = [
     business_id: "marina-physio",
     slot_id: "slot-3",
     caller_name: "Priya Nair",
-    reason: "Sports injury — left knee",
+    reason: "Sports injury, left knee",
     starts_at: "2026-06-12T14:00:00Z",
     status: "booked",
     created_at: "2026-06-12T13:40:00Z",
@@ -97,7 +97,7 @@ const MOCK_CALL_LOGS: CallLog[] = [
     business_id: "marina-physio",
     appointment_id: "appt-1",
     summary: "Caller has had lower back pain for 3 weeks and wants an urgent appointment.",
-    transcript: `[Agent] Good morning, Marina Physio — how can I help you today?\n\n[Caller] Hi, I've been having quite bad lower back pain for the past three weeks.\n\n[Agent] Of course, I'm sorry to hear that. I'll check what's available. Can I take your name?\n\n[Caller] Sure, it's Sarah Chen.\n\n[Agent] Thank you, Sarah. You're booked for today at 10:00 AM with Marina Physio.`,
+    transcript: `[Agent] Good morning, Marina Physio. How can I help you today?\n\n[Caller] Hi, I've been having quite bad lower back pain for the past three weeks.\n\n[Agent] Of course, I'm sorry to hear that. I'll check what's available. Can I take your name?\n\n[Caller] Sure, it's Sarah Chen.\n\n[Agent] Thank you, Sarah. You're booked for today at 10:00 AM with Marina Physio.`,
     created_at: "2026-06-12T09:46:00Z",
   },
   {

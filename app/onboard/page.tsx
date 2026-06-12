@@ -1,7 +1,7 @@
 "use client";
 
 /**
- * /onboard — real driver for the setup flow.
+ * /onboard: real driver for the setup flow.
  *
  * State machine: input -> extracting -> preview -> published
  *
@@ -28,7 +28,7 @@ const INITIAL_PHASES: ExtractionPhase[] = [
 // Minimum time (ms) each phase is visible before flipping done
 const PHASE_STEP_MS = 2800;
 
-// Default draft shown if extraction fails outright (should not happen — API
+// Default draft shown if extraction fails outright (should not happen, API
 // is designed to always return a usable draft)
 function fallbackDraft(url: string, description: string): TenantConfig {
   let hostname = url;
@@ -157,7 +157,7 @@ export default function OnboardPage() {
       if (cancelled) return;
       pendingDraftRef.current = resolvedDraft;
       if (phasesResolved) {
-        // Phases already finished — advance now
+        // Phases already finished, advance now.
         setTimeout(() => {
           if (!cancelled) {
             setProgress(1);
@@ -250,7 +250,7 @@ export default function OnboardPage() {
       if (!res.ok) {
         const err = await res.json().catch(() => ({})) as { error?: string };
         console.error("[onboard/publish]", err);
-        // Still advance — slug is derivable from name even if API hiccups
+        // Still advance, slug is derivable from name even if API hiccups.
       }
       const { slug } = (res.ok ? await res.json().catch(() => ({})) : {}) as { slug?: string };
       const finalSlug = slug ?? draft.name

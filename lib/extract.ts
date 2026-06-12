@@ -4,7 +4,7 @@
  * Step 1 (always): Microlink free-tier fetch for logo, hero, palette, title, description.
  * Step 2 (optional): LLM refinement via ai-provider.ts, only if hasLLM().
  *
- * Always returns a complete valid TenantConfig draft (no slug yet — caller assigns).
+ * Always returns a complete valid TenantConfig draft (no slug yet, caller assigns).
  * Never throws to the caller.
  */
 
@@ -263,7 +263,7 @@ export async function extractBrand(input: ExtractInput): Promise<TenantConfig> {
 
 Copy rules (non-negotiable):
 - No em dashes anywhere.
-- No filler words: "seamless", "elevate", "unlock", "effortless", "supercharge".
+- No vague marketing filler, hype words, or over-promising.
 - Write plain, human, concrete copy.
 - Taglines should be short (under 10 words), specific, and honest.
 - Greetings should sound like a real receptionist, not a chatbot.`;
