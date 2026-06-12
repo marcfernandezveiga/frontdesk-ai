@@ -93,7 +93,7 @@ function CallerInner() {
           setAppointment({
             callerName: caller_name,
             reason,
-            startsAt: new Date().toISOString(), // updated when slot data is available
+            startsAt: data.starts_at ?? new Date().toISOString(),
             duration: 30,
           });
           setCallState("confirmed");
@@ -103,6 +103,16 @@ function CallerInner() {
       },
     },
   });
+
+  // Once a booking is confirmed, let the agent deliver its closing line, then
+  // hang up automatically so it doesn't keep listening forever.
+  useEffect(() => {
+    if (callState !== "confirmed") return;
+    const t = setTimeout(() => {
+      conversation.endSession();
+    }, 4500);
+    return () => clearTimeout(t);
+  }, [callState, conversation]);
 
   // Post transcript to /api/call-log when session ends
   useEffect(() => {

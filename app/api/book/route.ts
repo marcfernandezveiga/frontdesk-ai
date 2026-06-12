@@ -163,6 +163,7 @@ export async function POST(request: Request) {
       ok: true,
       appointment_id: appt.id,
       confirmation: `You're booked for ${when}, see you then.`,
+      starts_at: slot.starts_at,
     };
     return Response.json(result);
   } catch (err) {

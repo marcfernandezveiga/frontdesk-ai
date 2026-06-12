@@ -56,5 +56,6 @@ export interface BookAppointmentResult {
   ok: boolean;
   appointment_id?: string;
   confirmation?: string; // human-readable line the agent reads back
+  starts_at?: string; // ISO start time of the booked slot (for the UI card)
   error?: string;
 }
