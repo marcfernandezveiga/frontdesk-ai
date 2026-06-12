@@ -214,22 +214,30 @@ function CallerInner({ tenant }: { tenant: TenantConfig }) {
     appointmentIdRef.current = undefined;
     liveCallIdRef.current = undefined;
 
-    try {
-      const liveCallRes = await fetch(`/api/live-call?business=${encodeURIComponent(slug)}`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          event: "start",
-          caller_phone: "+44 20 7946 0148",
-        }),
-      });
-      if (liveCallRes.ok) {
+    fetch(`/api/live-call?business=${encodeURIComponent(slug)}`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        event: "start",
+        caller_phone: "+44 20 7946 0148",
+      }),
+    })
+      .then(async (liveCallRes) => {
+        if (!liveCallRes.ok) return;
         const data = (await liveCallRes.json()) as { id?: string };
         liveCallIdRef.current = data.id;
-      }
-    } catch {
-      // Non-fatal: the voice call can continue without dashboard live state.
-    }
+        if (transcriptRef.current.length > 0 && data.id) {
+          postLiveCall({
+            event: "update",
+            call_id: data.id,
+            transcript: transcriptRef.current.join("\n\n"),
+            current_speaker: "caller",
+          });
+        }
+      })
+      .catch(() => {
+        // Non-fatal: the voice call can continue without dashboard live state.
+      });
 
     const overrides = {
       agent: {
@@ -238,25 +246,16 @@ function CallerInner({ tenant }: { tenant: TenantConfig }) {
       },
     };
 
-    try {
-      const tokenRes = await fetch("/api/elevenlabs/token");
-      if (tokenRes.ok) {
-        const { token } = (await tokenRes.json()) as { token: string };
-        conversation.startSession({ conversationToken: token, overrides });
-        return;
-      }
-    } catch {
-      // fall through
-    }
-
     if (!agentId) {
       setErrorMessage("No ElevenLabs agent configured. Set NEXT_PUBLIC_ELEVENLABS_AGENT_ID.");
       setCallState("ended");
       return;
     }
-    // Fallback: agentId session without overrides (base prompt applies)
-    conversation.startSession({ agentId });
-  }, [conversation, agentId, tenant]);
+
+    // Keep this call synchronous with the user's click. Safari can terminate
+    // audio sessions if async work happens before WebRTC starts.
+    conversation.startSession({ agentId, overrides });
+  }, [conversation, agentId, tenant, slug, postLiveCall]);
 
   const handleEndCall = useCallback(() => {
     conversation.endSession();
@@ -268,7 +267,7 @@ function CallerInner({ tenant }: { tenant: TenantConfig }) {
         appointment_id: appointmentIdRef.current ?? null,
       });
     }
-  }, [conversation]);
+  }, [conversation, postLiveCall]);
 
   const handleReset = useCallback(() => {
     conversation.endSession();
