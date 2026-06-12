@@ -81,7 +81,7 @@ Hours:
 {{hours}}
 `;
 
-const BASE_FIRST_MESSAGE = "Hello, thanks for calling. How can I help you today?";
+const BASE_FIRST_MESSAGE = "Hello, thanks for calling {{business_name}}. How can I help you today?";
 
 // ---------------------------------------------------------------------------
 // Client tools (same across all tenants)
@@ -196,9 +196,7 @@ async function updateAgent() {
 
   console.log("Agent updated successfully.");
   console.log(`  Agent ID: ${AGENT_ID}`);
-  console.log(`  Overrides enabled: prompt + first_message`);
-  console.log(`\nThe /c/[slug] page can now call:`);
-  console.log(`  startSession({ overrides: { agent: { prompt: { prompt: "<composed>" }, firstMessage: "<greeting>" } } })`);
+  console.log(`  Dynamic variables enabled for business_name, services, hours`);
 }
 
 updateAgent().catch((err) => {

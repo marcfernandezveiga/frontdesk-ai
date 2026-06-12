@@ -24,7 +24,7 @@ import type { CheckAvailabilityResult, BookAppointmentResult } from "@/lib/types
 
 // ─── Prompt builder ──────────────────────────────────────────────────────────
 
-function buildReceptionistPrompt(tenant: TenantConfig): string {
+function buildTenantVariables(tenant: TenantConfig): Record<string, string> {
   const dayNames = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 
   const hoursLines = Object.entries(tenant.hours)
@@ -37,17 +37,11 @@ function buildReceptionistPrompt(tenant: TenantConfig): string {
 
   const servicesList = tenant.services.map((s) => s.name).join(", ");
 
-  return [
-    `You are a friendly, professional AI receptionist for ${tenant.name}.`,
-    tenant.description ? `About the business: ${tenant.description}` : null,
-    servicesList ? `Services offered: ${servicesList}.` : null,
-    hoursLines ? `Opening hours: ${hoursLines}.` : null,
-    "Your job is to help callers book appointments. Be warm but brief. Do not make up information not listed above.",
-    "When a caller wants to book, use the check_availability tool to find open slots, then book_appointment to confirm.",
-    "After confirming a booking, read back the appointment time clearly, thank the caller, and end the call.",
-  ]
-    .filter(Boolean)
-    .join(" ");
+  return {
+    business_name: tenant.name,
+    services: servicesList || "Appointments",
+    hours: hoursLines || "Available appointment slots are checked live",
+  };
 }
 
 // ─── Inner component (must be inside ConversationProvider) ───────────────────
@@ -239,13 +233,6 @@ function CallerInner({ tenant }: { tenant: TenantConfig }) {
         // Non-fatal: the voice call can continue without dashboard live state.
       });
 
-    const overrides = {
-      agent: {
-        prompt: { prompt: buildReceptionistPrompt(tenant) },
-        firstMessage: tenant.greeting,
-      },
-    };
-
     if (!agentId) {
       setErrorMessage("No ElevenLabs agent configured. Set NEXT_PUBLIC_ELEVENLABS_AGENT_ID.");
       setCallState("ended");
@@ -254,7 +241,10 @@ function CallerInner({ tenant }: { tenant: TenantConfig }) {
 
     // Keep this call synchronous with the user's click. Safari can terminate
     // audio sessions if async work happens before WebRTC starts.
-    conversation.startSession({ agentId, overrides });
+    conversation.startSession({
+      agentId,
+      dynamicVariables: buildTenantVariables(tenant),
+    });
   }, [conversation, agentId, tenant, slug, postLiveCall]);
 
   const handleEndCall = useCallback(() => {
