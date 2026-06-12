@@ -146,7 +146,7 @@ const agentPayload = {
     tts: {
       // Warm, natural British English voice — "Rachel" is a good default.
       // Change this to a voice_id from your ElevenLabs library if preferred.
-      model_id: "eleven_turbo_v2_5",
+      model_id: "eleven_flash_v2",
     },
   },
   platform_settings: {
