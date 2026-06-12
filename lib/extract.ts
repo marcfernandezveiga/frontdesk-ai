@@ -164,26 +164,28 @@ function templateGreeting(name: string): string {
 
 const LLMDraftSchema = z.object({
   name: z.string().min(1),
-  tagline: z.string().optional(),
+  tagline: z.string().nullable(),
   greeting: z.string().min(1),
   services: z.array(z.object({ name: z.string() })).min(1).max(10),
-  hours: z.record(
-    z.string(),
-    z.union([
-      z.object({ open: z.string(), close: z.string() }),
-      z.null(),
-    ])
-  ),
+  hours: z.object({
+    "0": z.union([z.object({ open: z.string(), close: z.string() }), z.null()]),
+    "1": z.union([z.object({ open: z.string(), close: z.string() }), z.null()]),
+    "2": z.union([z.object({ open: z.string(), close: z.string() }), z.null()]),
+    "3": z.union([z.object({ open: z.string(), close: z.string() }), z.null()]),
+    "4": z.union([z.object({ open: z.string(), close: z.string() }), z.null()]),
+    "5": z.union([z.object({ open: z.string(), close: z.string() }), z.null()]),
+    "6": z.union([z.object({ open: z.string(), close: z.string() }), z.null()]),
+  }),
   theme: z.object({
-    bg: z.string().optional(),
-    fg: z.string().optional(),
-    accent: z.string().optional(),
-    accentFg: z.string().optional(),
-    muted: z.string().optional(),
-    border: z.string().optional(),
-    radius: z.string().optional(),
-    fontSans: z.string().optional(),
-  }).optional(),
+    bg: z.string(),
+    fg: z.string(),
+    accent: z.string(),
+    accentFg: z.string(),
+    muted: z.string(),
+    border: z.string(),
+    radius: z.string(),
+    fontSans: z.string(),
+  }),
 });
 
 type LLMDraft = z.infer<typeof LLMDraftSchema>;
@@ -299,7 +301,8 @@ Copy rules (non-negotiable):
 
       const hours: BusinessHours = {};
       for (let d = 0; d <= 6; d++) {
-        const v = llm.hours[String(d)];
+        const key = String(d) as keyof typeof llm.hours;
+        const v = llm.hours[key];
         if (v && typeof v === "object" && "open" in v && "close" in v) {
           hours[d] = { open: (v as { open: string; close: string }).open, close: (v as { open: string; close: string }).close };
         } else {
@@ -312,7 +315,7 @@ Copy rules (non-negotiable):
         name: llm.name,
         description: description || metaDescription || "",
         timezone: "Europe/London",
-        tagline: llm.tagline,
+        tagline: llm.tagline ?? undefined,
         greeting: llm.greeting,
         services: llm.services,
         hours,
