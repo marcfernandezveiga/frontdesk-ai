@@ -354,6 +354,7 @@ export default function TenantDashboardPage() {
               loading={scheduleLoading}
               onPrevWeek={() => setWeekStart((w) => shiftDate(w, -7))}
               onNextWeek={() => setWeekStart((w) => shiftDate(w, 7))}
+              onToday={() => setWeekStart(getMonday(new Date()))}
             />
           </div>
         )}

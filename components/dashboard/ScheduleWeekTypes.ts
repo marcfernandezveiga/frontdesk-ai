@@ -37,4 +37,6 @@ export interface ScheduleWeekProps {
   onPrevWeek: () => void;
   /** Navigate to the next week. Wave 2 increments weekStart by 7 days. */
   onNextWeek: () => void;
+  /** Jump back to the current week. */
+  onToday?: () => void;
 }

@@ -205,6 +205,7 @@ export function ScheduleWeek({
   loading = false,
   onPrevWeek,
   onNextWeek,
+  onToday,
 }: ScheduleWeekProps) {
   const scrollRef = useRef<HTMLDivElement>(null);
   const scrolledWeekRef = useRef<string | null>(null);
@@ -262,6 +263,15 @@ export function ScheduleWeek({
           </span>
         </div>
         <div className="flex items-center gap-1">
+          {onToday && (
+            <button
+              type="button"
+              onClick={onToday}
+              className="h-8 px-3 mr-1 flex items-center justify-center rounded-[6px] text-xs font-semibold text-[oklch(20%_0_0)] border border-[oklch(80%_0.005_264)] bg-white hover:bg-[oklch(95%_0.003_264)] hover:border-[oklch(68%_0.006_264)] active:scale-[0.97] transition-all duration-150 outline-none cursor-pointer focus-visible:ring-2 focus-visible:ring-[oklch(48%_0.2_264)] focus-visible:ring-offset-1"
+            >
+              Today
+            </button>
+          )}
           <button
             type="button"
             onClick={onPrevWeek}
@@ -343,23 +353,38 @@ export function ScheduleWeek({
             </div>
 
             {/* Day columns */}
-            {days.map((_, dayIdx) => {
+            {days.map((day, dayIdx) => {
               const daySlots = slotsByDay.get(dayIdx) ?? [];
+              const dayIsToday = isToday(day);
+              const now = new Date();
+              const nowTop = timeToTop(now.getHours(), now.getMinutes());
               return (
                 <div
                   key={dayIdx}
-                  className="flex-1 relative border-l border-[oklch(92%_0.003_264)]"
+                  className="flex-1 relative border-l border-[oklch(87%_0.004_264)]"
                   style={{ height: TOTAL_HEIGHT_PX }}
                 >
                   {/* Hour grid lines */}
                   {hours.map((h) => (
                     <div
                       key={h}
-                      className="absolute left-0 right-0 border-t border-[oklch(92%_0.003_264)]"
+                      className="absolute left-0 right-0 border-t border-[oklch(88%_0.004_264)]"
                       style={{ top: h * HOUR_HEIGHT_PX }}
                       aria-hidden="true"
                     />
                   ))}
+
+                  {/* Now indicator (fuchsia) on today's column */}
+                  {dayIsToday && (
+                    <div
+                      className="absolute left-0 right-0 z-20"
+                      style={{ top: nowTop, pointerEvents: "none" }}
+                      aria-hidden="true"
+                    >
+                      <div className="absolute left-0 right-0" style={{ borderTop: "2px solid #d946ef", top: 0 }} />
+                      <div className="absolute rounded-full" style={{ background: "#d946ef", width: 7, height: 7, left: -3, top: -3.5 }} />
+                    </div>
+                  )}
 
                   {/* Slot blocks */}
                   {daySlots.map(({ slot, top, height }) => (
