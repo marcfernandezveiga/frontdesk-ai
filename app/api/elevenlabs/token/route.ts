@@ -24,14 +24,14 @@ export async function GET() {
 
   try {
     const res = await fetch(
-      `https://api.elevenlabs.io/v1/convai/conversation/token`,
+      `https://api.elevenlabs.io/v1/convai/conversation/token?agent_id=${encodeURIComponent(
+        agentId
+      )}`,
       {
-        method: "POST",
+        method: "GET",
         headers: {
           "xi-api-key": apiKey,
-          "Content-Type": "application/json",
         },
-        body: JSON.stringify({ agent_id: agentId }),
       }
     );
 
@@ -44,8 +44,11 @@ export async function GET() {
       );
     }
 
-    const data = (await res.json()) as { conversation_token: string };
-    return Response.json({ token: data.conversation_token });
+    const data = (await res.json()) as {
+      token?: string;
+      conversation_token?: string;
+    };
+    return Response.json({ token: data.token ?? data.conversation_token });
   } catch (err) {
     console.error("[elevenlabs/token] Unexpected error:", err);
     return Response.json({ error: "Internal server error" }, { status: 500 });
