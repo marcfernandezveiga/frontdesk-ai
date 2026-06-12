@@ -14,7 +14,9 @@
 
 import { useState, useEffect, useRef } from "react";
 import { OnboardingFlow } from "./OnboardingFlow";
-import { DEFAULT_THEME } from "@/lib/tenant";
+import { DEFAULT_THEME, DEFAULT_SCHEDULE } from "@/lib/tenant";
+import type { Schedule } from "@/lib/tenant";
+import { countSlotsPerWeek } from "@/lib/schedule";
 import type { OnboardingStep, ExtractionPhase } from "./OnboardingTypes";
 import type { TenantConfig } from "@/lib/tenant";
 
@@ -51,6 +53,7 @@ const MOCK_DRAFT: TenantConfig = {
     radius: "10px",
     fontSans: "Georgia, serif",
   },
+  schedule: DEFAULT_SCHEDULE,
   slotDurationMin: 45,
 };
 
@@ -75,6 +78,9 @@ export function OnboardingMockDriver() {
   // Preview editing
   const [draft, setDraft] = useState<TenantConfig>(MOCK_DRAFT);
   const [publishing, setPublishing] = useState(false);
+
+  // Schedule editing (mock driver: just holds draft.schedule)
+  const handleMockScheduleChange = (s: Schedule) => setDraft((d) => ({ ...d, schedule: s }));
 
   // Published
   const [publishedSlug, setPublishedSlug] = useState("demo-preview");
@@ -218,9 +224,17 @@ export function OnboardingMockDriver() {
         onServiceChange: handleServiceChange,
         onServiceAdd: handleServiceAdd,
         onServiceRemove: handleServiceRemove,
-        publishing,
-        onPublish: handlePublish,
+        publishing: false,
+        onPublish: () => setStep("schedule"),
         onBack: () => setStep("input"),
+      }}
+      scheduleProps={{
+        schedule: draft.schedule,
+        onChange: handleMockScheduleChange,
+        slotsPerWeek: countSlotsPerWeek(draft.schedule),
+        publishing,
+        onBack: () => setStep("preview"),
+        onContinue: handlePublish,
       }}
       publishedProps={{
         slug: publishedSlug,

@@ -3,6 +3,7 @@
 import { OnboardingInput } from "./OnboardingInput";
 import { OnboardingExtracting } from "./OnboardingExtracting";
 import { OnboardingPreview } from "./OnboardingPreview";
+import { OnboardingSchedule } from "./OnboardingSchedule";
 import { OnboardingPublished } from "./OnboardingPublished";
 import type { OnboardingFlowProps } from "./OnboardingTypes";
 
@@ -20,6 +21,7 @@ export function OnboardingFlow({
   inputProps,
   extractingProps,
   previewProps,
+  scheduleProps,
   publishedProps,
 }: OnboardingFlowProps) {
   return (
@@ -36,7 +38,7 @@ export function OnboardingFlow({
         </div>
         {/* Step indicator */}
         <div className="flex items-center gap-1.5" aria-label="Setup steps">
-          {(["input", "extracting", "preview", "published"] as const).map((s, i) => (
+          {(["input", "extracting", "preview", "schedule", "published"] as const).map((s, i) => (
             <span
               key={s}
               className="w-1.5 h-1.5 rounded-full transition-colors duration-300"
@@ -44,7 +46,7 @@ export function OnboardingFlow({
                 background:
                   s === step
                     ? "oklch(9% 0 0)"
-                    : (["input", "extracting", "preview", "published"].indexOf(step) > i
+                    : (["input", "extracting", "preview", "schedule", "published"].indexOf(step) > i
                       ? "oklch(48% 0.2 264)"
                       : "oklch(88% 0.004 264)"),
               }}
@@ -66,6 +68,7 @@ export function OnboardingFlow({
           {step === "input" && <OnboardingInput {...inputProps} />}
           {step === "extracting" && <OnboardingExtracting {...extractingProps} />}
           {step === "preview" && <OnboardingPreview {...previewProps} />}
+          {step === "schedule" && <OnboardingSchedule {...scheduleProps} />}
           {step === "published" && <OnboardingPublished {...publishedProps} />}
         </div>
       </main>

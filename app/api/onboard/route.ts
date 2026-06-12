@@ -8,7 +8,7 @@
 
 import { NextRequest } from "next/server";
 import type { TenantConfig } from "@/lib/tenant";
-import { DEFAULT_THEME } from "@/lib/tenant";
+import { DEFAULT_THEME, DEFAULT_SCHEDULE } from "@/lib/tenant";
 import { extractBrand } from "@/lib/extract";
 
 export async function POST(request: NextRequest) {
@@ -55,6 +55,7 @@ export async function POST(request: NextRequest) {
         5: { open: "09:00", close: "17:00" },
         6: null,
       },
+      schedule: DEFAULT_SCHEDULE,
       theme: { ...DEFAULT_THEME },
       slotDurationMin: 30,
     };

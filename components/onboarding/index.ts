@@ -4,6 +4,7 @@ export { OnboardingExtracting } from "./OnboardingExtracting";
 export { OnboardingPreview } from "./OnboardingPreview";
 export { OnboardingPublished } from "./OnboardingPublished";
 export { OnboardingMockDriver } from "./OnboardingMockDriver";
+export { OnboardingSchedule } from "./OnboardingSchedule";
 export type {
   OnboardingStep,
   OnboardingFlowProps,
@@ -13,3 +14,4 @@ export type {
   OnboardingPreviewProps,
   OnboardingPublishedProps,
 } from "./OnboardingTypes";
+export type { OnboardingScheduleProps } from "./OnboardingSchedule";

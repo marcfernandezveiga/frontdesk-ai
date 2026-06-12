@@ -10,13 +10,31 @@
 import { useCallback, useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import { DashboardPage } from "@/components/dashboard/DashboardPage";
+import { ScheduleWeek } from "@/components/dashboard/ScheduleWeek";
 import { themeToCssVars } from "@/lib/tenant";
 import type { TenantConfig } from "@/lib/tenant";
 import type { Appointment, CallLog, LiveCall } from "@/lib/types";
 import type { AvailabilitySlot } from "@/components/dashboard/DashboardTypes";
 import type { DashboardPayload } from "@/app/api/dashboard/route";
+import type { ScheduleSlot } from "@/components/dashboard/ScheduleWeekTypes";
 
 const POLL_INTERVAL_MS = 1500;
+
+/** Return the ISO date string (YYYY-MM-DD) for the Monday of the week containing `date`. */
+function getMonday(date: Date): string {
+  const d = new Date(date);
+  const day = d.getDay(); // 0=Sun
+  const diff = day === 0 ? -6 : 1 - day;
+  d.setDate(d.getDate() + diff);
+  return d.toISOString().slice(0, 10);
+}
+
+/** Shift a YYYY-MM-DD date string by `days` days. */
+function shiftDate(iso: string, days: number): string {
+  const d = new Date(iso);
+  d.setDate(d.getDate() + days);
+  return d.toISOString().slice(0, 10);
+}
 
 export default function TenantDashboardPage() {
   const params = useParams<{ slug: string }>();
@@ -26,6 +44,11 @@ export default function TenantDashboardPage() {
   const [data, setData] = useState<DashboardPayload | null>(null);
   const [loading, setLoading] = useState(true);
   const [selectedAppointmentId, setSelectedAppointmentId] = useState<string | null>(null);
+
+  // Schedule week state
+  const [weekStart, setWeekStart] = useState<string>(() => getMonday(new Date()));
+  const [scheduleSlots, setScheduleSlots] = useState<ScheduleSlot[]>([]);
+  const [scheduleLoading, setScheduleLoading] = useState(true);
 
   // Fetch tenant config once
   useEffect(() => {
@@ -62,11 +85,36 @@ export default function TenantDashboardPage() {
     }
   }, [slug]);
 
+  const fetchScheduleWeek = useCallback(async () => {
+    if (!slug) return;
+    try {
+      const res = await fetch(
+        `/api/schedule-week?business=${encodeURIComponent(slug)}&weekStart=${weekStart}`,
+        { cache: "no-store" }
+      );
+      if (!res.ok) return;
+      const json: { slots: ScheduleSlot[] } = await res.json();
+      setScheduleSlots(json.slots ?? []);
+    } catch {
+      // Keep showing stale data
+    } finally {
+      setScheduleLoading(false);
+    }
+  }, [slug, weekStart]);
+
   useEffect(() => {
     fetchDashboard();
     const id = setInterval(fetchDashboard, POLL_INTERVAL_MS);
     return () => clearInterval(id);
   }, [fetchDashboard]);
+
+  // Fetch schedule week on mount, on weekStart change, and on the same poll cadence
+  useEffect(() => {
+    setScheduleLoading(true);
+    fetchScheduleWeek();
+    const id = setInterval(fetchScheduleWeek, POLL_INTERVAL_MS);
+    return () => clearInterval(id);
+  }, [fetchScheduleWeek]);
 
   const availabilitySlots: AvailabilitySlot[] = (data?.slots ?? []).map((dto) => ({
     slot: dto.slot,
@@ -98,6 +146,15 @@ export default function TenantDashboardPage() {
         onSelectAppointment={setSelectedAppointmentId}
         loading={loading}
       />
+      <div className="px-4 pb-8 pt-4 max-w-5xl mx-auto">
+        <ScheduleWeek
+          slots={scheduleSlots}
+          weekStart={weekStart}
+          loading={scheduleLoading}
+          onPrevWeek={() => setWeekStart((w) => shiftDate(w, -7))}
+          onNextWeek={() => setWeekStart((w) => shiftDate(w, 7))}
+        />
+      </div>
     </div>
   );
 }

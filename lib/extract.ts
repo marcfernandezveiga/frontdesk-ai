@@ -10,8 +10,8 @@
 
 import { generateObject } from "ai";
 import { z } from "zod";
-import type { TenantConfig, BrandTheme, BusinessHours } from "./tenant";
-import { DEFAULT_THEME } from "./tenant";
+import type { TenantConfig, BrandTheme, BusinessHours, Schedule } from "./tenant";
+import { DEFAULT_THEME, DEFAULT_SCHEDULE, SCHEDULE_PRESETS } from "./tenant";
 import { hasLLM, getVisionModel } from "./ai-provider";
 
 // ---------------------------------------------------------------------------
@@ -152,6 +152,43 @@ function templateHours(): BusinessHours {
     5: { open: "09:00", close: "17:00" },
     6: null,
   };
+}
+
+/**
+ * Best-effort schedule guess from the business description.
+ * Restaurant -> split lunch/dinner preset.
+ * Clinic/shop -> weekdays 9-5.
+ * Anything else -> DEFAULT_SCHEDULE.
+ */
+function templateSchedule(description: string): Schedule {
+  const lower = description.toLowerCase();
+
+  if (
+    lower.includes("restaurant") ||
+    lower.includes("bistro") ||
+    lower.includes("brasserie") ||
+    lower.includes("cafe") ||
+    lower.includes("diner")
+  ) {
+    const restaurant = SCHEDULE_PRESETS.find((p) => p.id === "restaurant");
+    if (restaurant) return restaurant.schedule;
+  }
+
+  // Clinics, shops, salons, dental — standard weekday hours
+  if (
+    lower.includes("clinic") ||
+    lower.includes("physio") ||
+    lower.includes("dental") ||
+    lower.includes("salon") ||
+    lower.includes("shop") ||
+    lower.includes("store") ||
+    lower.includes("office") ||
+    lower.includes("rehab")
+  ) {
+    return DEFAULT_SCHEDULE;
+  }
+
+  return DEFAULT_SCHEDULE;
 }
 
 function templateGreeting(name: string): string {
@@ -319,6 +356,7 @@ Copy rules (non-negotiable):
         greeting: llm.greeting,
         services: llm.services,
         hours,
+        schedule: templateSchedule(description || metaDescription || ""),
         theme: mergedTheme,
         slotDurationMin: 30,
       };
@@ -337,6 +375,7 @@ Copy rules (non-negotiable):
     greeting: fallbackGreeting,
     services: fallbackServices,
     hours: fallbackHours,
+    schedule: templateSchedule(description || metaDescription || ""),
     theme: deterministicTheme,
     slotDurationMin: 30,
   };

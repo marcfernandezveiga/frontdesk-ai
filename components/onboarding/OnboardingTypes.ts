@@ -1,10 +1,11 @@
 /**
  * Onboarding flow types.
  *
- * The flow has four states:
+ * The flow has five states:
  *   input      → user enters URL + description
  *   extracting → async brand extraction in progress
  *   preview    → draft TenantConfig shown with live branded preview + edit fields
+ *   schedule   → owner sets their working hours and slot duration
  *   published  → business is live, shareable link shown
  *
  * All components are presentational and prop-driven.
@@ -12,10 +13,11 @@
  */
 
 import type { TenantConfig, BrandTheme, Service, BusinessHours } from "@/lib/tenant";
+import type { OnboardingScheduleProps } from "./OnboardingSchedule";
 
 // ─── Flow state ───────────────────────────────────────────────────────────────
 
-export type OnboardingStep = "input" | "extracting" | "preview" | "published";
+export type OnboardingStep = "input" | "extracting" | "preview" | "schedule" | "published";
 
 // ─── Input step ───────────────────────────────────────────────────────────────
 
@@ -110,6 +112,8 @@ export interface OnboardingFlowProps {
   extractingProps: OnboardingExtractingProps;
   // Preview step
   previewProps: OnboardingPreviewProps;
+  // Schedule step
+  scheduleProps: OnboardingScheduleProps;
   // Published step
   publishedProps: OnboardingPublishedProps;
 }

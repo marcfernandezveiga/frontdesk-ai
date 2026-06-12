@@ -1,14 +1,37 @@
 /**
  * GET /api/businesses/[slug]
- * Returns a TenantConfig for the given slug.
+ * Returns a TenantConfig for the given slug, including schedule.
  */
 
 import { NextRequest } from "next/server";
-import type { TenantConfig, BrandTheme, BusinessHours } from "@/lib/tenant";
-import { DEFAULT_THEME } from "@/lib/tenant";
+import type { TenantConfig, BrandTheme, BusinessHours, Schedule } from "@/lib/tenant";
+import { DEFAULT_THEME, DEFAULT_SCHEDULE } from "@/lib/tenant";
 import { hasSupabaseEnv, createServiceClient } from "@/lib/supabase";
 
-// Marina Physio mock for when Supabase is not configured
+// ---------------------------------------------------------------------------
+// Legacy hours -> schedule conversion (back-compat for rows without schedule)
+// ---------------------------------------------------------------------------
+
+function hoursToSchedule(
+  hours: Record<string, { open: string; close: string } | null>,
+  slotDurationMin: number
+): Schedule {
+  const week: Schedule["week"] = {};
+  for (let d = 0; d <= 6; d++) {
+    const v = hours[String(d)];
+    if (v && v.open && v.close) {
+      week[d] = { enabled: true, shifts: [{ start: v.open, end: v.close }] };
+    } else {
+      week[d] = { enabled: false, shifts: [] };
+    }
+  }
+  return { week, slotDurationMin };
+}
+
+// ---------------------------------------------------------------------------
+// Marina Physio mock (no Supabase)
+// ---------------------------------------------------------------------------
+
 const MARINA_MOCK: TenantConfig = {
   slug: "marina-physio",
   name: "Marina Physio",
@@ -33,9 +56,14 @@ const MARINA_MOCK: TenantConfig = {
     5: { open: "09:00", close: "17:00" },
     6: null,
   },
+  schedule: DEFAULT_SCHEDULE,
   theme: { ...DEFAULT_THEME },
   slotDurationMin: 30,
 };
+
+// ---------------------------------------------------------------------------
+// Route handler
+// ---------------------------------------------------------------------------
 
 export async function GET(
   _request: NextRequest,
@@ -64,7 +92,6 @@ export async function GET(
       return Response.json({ error: "Business not found" }, { status: 404 });
     }
 
-    // Map DB row to TenantConfig
     const row = data as {
       slug: string;
       name: string;
@@ -76,13 +103,25 @@ export async function GET(
       hours: Record<string, { open: string; close: string } | null>;
       theme: Partial<BrandTheme>;
       slot_duration_min: number;
+      schedule: Schedule | null;
     };
 
-    // Convert hours keys from strings back to numbers
+    // Convert hours keys from strings to numbers (back-compat)
     const hours: BusinessHours = {};
     for (let d = 0; d <= 6; d++) {
       const v = row.hours[String(d)];
       hours[d] = v ?? null;
+    }
+
+    // Resolve schedule: use the stored one, fall back to deriving from legacy hours,
+    // or use DEFAULT_SCHEDULE as last resort.
+    let schedule: Schedule;
+    if (row.schedule) {
+      schedule = row.schedule;
+    } else if (Object.keys(row.hours).length > 0) {
+      schedule = hoursToSchedule(row.hours, row.slot_duration_min);
+    } else {
+      schedule = DEFAULT_SCHEDULE;
     }
 
     const config: TenantConfig = {
@@ -94,6 +133,7 @@ export async function GET(
       greeting: row.greeting,
       services: row.services ?? [],
       hours,
+      schedule,
       theme: { ...DEFAULT_THEME, ...row.theme },
       slotDurationMin: row.slot_duration_min,
     };

@@ -14,8 +14,9 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import { OnboardingFlow } from "@/components/onboarding";
 import type { OnboardingStep, ExtractionPhase } from "@/components/onboarding";
-import type { TenantConfig } from "@/lib/tenant";
-import { DEFAULT_THEME } from "@/lib/tenant";
+import type { TenantConfig, Schedule } from "@/lib/tenant";
+import { DEFAULT_THEME, DEFAULT_SCHEDULE } from "@/lib/tenant";
+import { countSlotsPerWeek } from "@/lib/schedule";
 
 // Phases shown during extraction. The last one flips done when the API resolves.
 const INITIAL_PHASES: ExtractionPhase[] = [
@@ -57,6 +58,7 @@ function fallbackDraft(url: string, description: string): TenantConfig {
       5: { open: "09:00", close: "17:00" },
       6: null,
     },
+    schedule: DEFAULT_SCHEDULE,
     theme: { ...DEFAULT_THEME },
     slotDurationMin: 30,
   };
@@ -237,7 +239,13 @@ export default function OnboardPage() {
     }));
   }, []);
 
-  // ─── Publish ───────────────────────────────────────────────────────────────
+  // ─── Schedule ──────────────────────────────────────────────────────────────
+
+  const handleScheduleChange = useCallback((schedule: Schedule) => {
+    setDraft((d) => ({ ...d, schedule }));
+  }, []);
+
+  // ─── Publish (called from schedule step onContinue) ────────────────────────
 
   const handlePublish = useCallback(async () => {
     setPublishing(true);
@@ -316,9 +324,17 @@ export default function OnboardPage() {
         onServiceChange: handleServiceChange,
         onServiceAdd: handleServiceAdd,
         onServiceRemove: handleServiceRemove,
-        publishing,
-        onPublish: handlePublish,
+        publishing: false,
+        onPublish: () => setStep("schedule"),
         onBack: () => setStep("input"),
+      }}
+      scheduleProps={{
+        schedule: draft.schedule,
+        onChange: handleScheduleChange,
+        slotsPerWeek: countSlotsPerWeek(draft.schedule),
+        publishing,
+        onBack: () => setStep("preview"),
+        onContinue: handlePublish,
       }}
       publishedProps={{
         slug: publishedSlug,
