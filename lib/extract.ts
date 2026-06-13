@@ -119,6 +119,19 @@ function extractFonts(html: string): { fontSans: string; fontUrl?: string } {
   return { fontSans: DEFAULT_THEME.fontSans };
 }
 
+/** Build a loadable font stack + Google Fonts URL from a font family name. */
+function buildFontFields(
+  googleFont?: string
+): { fontSans: string; fontUrl: string } | Record<string, never> {
+  const fam = (googleFont ?? "").replace(/['"]/g, "").trim();
+  if (!fam) return {};
+  const urlFamily = fam.replace(/\s+/g, "+");
+  return {
+    fontSans: `'${fam}', ui-sans-serif, system-ui, sans-serif`,
+    fontUrl: `https://fonts.googleapis.com/css2?family=${urlFamily}:wght@400;500;600;700;800&display=swap`,
+  };
+}
+
 // ---------------------------------------------------------------------------
 // Template fallbacks (no LLM)
 // ---------------------------------------------------------------------------
@@ -221,7 +234,7 @@ const LLMDraftSchema = z.object({
     muted: z.string(),
     border: z.string(),
     radius: z.string(),
-    fontSans: z.string(),
+    googleFont: z.string(),
   }),
 });
 
@@ -296,7 +309,17 @@ export async function extractBrand(input: ExtractInput): Promise<TenantConfig> {
     try {
       const model = getVisionModel();
 
-      const systemPrompt = `You are a brand analyst. Given a business URL, its page title, description, and optionally a screenshot URL, return structured data about the business.
+      const systemPrompt = `You are a brand and visual identity analyst. You are given a business website (title, description, user note) and, when available, a SCREENSHOT image of the homepage. Return structured data about the business AND its visual brand.
+
+For the theme, read the brand straight from the SCREENSHOT (do not default to generic blue/grey). All colors are hex (#rrggbb):
+- accent: the single dominant, signature brand color (the loud color used on buttons, headings, highlights). For a bold brand this should be saturated, not muted.
+- bg: the main page background color (often white or a soft brand tint).
+- fg: the primary body text color (usually near-black, or the brand's dark color).
+- accentFg: a color that is clearly readable ON TOP of accent (usually #ffffff or #000000, pick whichever has more contrast).
+- muted: a soft, low-contrast tone for secondary text and subtle surfaces.
+- border: a subtle hairline border color.
+- radius: corner radius matching the site's feel, like "8px", "12px", or "999px" for very rounded/pill UIs.
+- googleFont: the Google Fonts family that most closely matches the site's HEADING/display typography. Must be a real Google Font (examples: "Fredoka", "Poppins", "Bebas Neue", "Archivo", "Montserrat", "Playfair Display", "Inter", "Space Grotesk"). If the brand uses a custom font, choose the closest Google Font in weight and personality (e.g. a chunky rounded display font maps to "Fredoka" or "Baloo 2").
 
 Copy rules (non-negotiable):
 - No em dashes anywhere.
@@ -314,11 +337,25 @@ Copy rules (non-negotiable):
         `Detected palette colors: ${palette.slice(0, 5).join(", ") || "(none)"}`,
       ].filter(Boolean).join("\n");
 
+      // Feed the homepage screenshot (or hero image) to the vision model as an
+      // actual image so it can read the brand's real colors and typography.
+      const visionImage = screenshotUrl ?? heroUrl;
       const { object } = await generateObject({
         model: model as Parameters<typeof generateObject>[0]["model"],
         schema: LLMDraftSchema,
         system: systemPrompt,
-        prompt: userContent,
+        messages: [
+          {
+            role: "user",
+            content: [
+              { type: "text", text: userContent },
+              ...(visionImage
+                ? [{ type: "image" as const, image: visionImage }]
+                : []),
+            ],
+          },
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        ] as any,
       });
 
       const llm = object as LLMDraft;
@@ -333,7 +370,7 @@ Copy rules (non-negotiable):
         ...(llm.theme?.muted && isValidHex(llm.theme.muted) ? { muted: llm.theme.muted } : {}),
         ...(llm.theme?.border && isValidHex(llm.theme.border) ? { border: llm.theme.border } : {}),
         ...(llm.theme?.radius ? { radius: llm.theme.radius } : {}),
-        ...(llm.theme?.fontSans ? { fontSans: llm.theme.fontSans } : {}),
+        ...buildFontFields(llm.theme?.googleFont),
       };
 
       const hours: BusinessHours = {};

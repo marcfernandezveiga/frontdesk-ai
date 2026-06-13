@@ -10,9 +10,11 @@ import { useEffect } from "react";
 export function TenantHead({
   name,
   logoUrl,
+  fontUrl,
 }: {
   name?: string;
   logoUrl?: string;
+  fontUrl?: string;
 }) {
   useEffect(() => {
     if (name) document.title = name;
@@ -32,6 +34,17 @@ export function TenantHead({
       if (link) link.href = previous;
     };
   }, [logoUrl]);
+
+  useEffect(() => {
+    if (!fontUrl) return;
+    const link = document.createElement("link");
+    link.rel = "stylesheet";
+    link.href = fontUrl;
+    document.head.appendChild(link);
+    return () => {
+      link.remove();
+    };
+  }, [fontUrl]);
 
   return null;
 }

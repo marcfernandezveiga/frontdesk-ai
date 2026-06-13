@@ -344,7 +344,7 @@ export default function TenantCallerPage() {
 
   return (
     <div style={cssVars}>
-      <TenantHead name={tenant.name} logoUrl={tenant.theme.logoUrl} />
+      <TenantHead name={tenant.name} logoUrl={tenant.theme.logoUrl} fontUrl={tenant.theme.fontUrl} />
       {tenant.theme.fontUrl && (
         // eslint-disable-next-line @next/next/no-page-custom-font
         <link rel="stylesheet" href={tenant.theme.fontUrl} />

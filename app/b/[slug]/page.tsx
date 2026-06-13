@@ -329,7 +329,7 @@ export default function TenantDashboardPage() {
         fontFamily: "var(--fd-font-sans, ui-sans-serif, system-ui, sans-serif)",
       }}
     >
-      <TenantHead name={tenant?.name} logoUrl={tenant?.theme.logoUrl} />
+      <TenantHead name={tenant?.name} logoUrl={tenant?.theme.logoUrl} fontUrl={tenant?.theme.fontUrl} />
       {/* Left sidebar */}
       <DashboardSidebar
         tenant={tenant}
