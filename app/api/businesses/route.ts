@@ -13,6 +13,7 @@ import type { TenantConfig } from "@/lib/tenant";
 import { DEFAULT_SCHEDULE } from "@/lib/tenant";
 import { generateSlots } from "@/lib/schedule";
 import { hasSupabaseEnv, createServiceClient } from "@/lib/supabase";
+import { checkRateLimit, getClientIp } from "@/lib/rate-limit";
 
 // ---------------------------------------------------------------------------
 // Slug helpers
@@ -33,6 +34,16 @@ function slugify(name: string): string {
 // ---------------------------------------------------------------------------
 
 export async function POST(request: NextRequest) {
+  const ip = getClientIp(request);
+  const { allowed, reason } = await checkRateLimit(
+    "/api/businesses",
+    ip,
+    { perIpPerHour: 6, perDayGlobal: 120 }
+  );
+  if (!allowed) {
+    return Response.json({ error: reason }, { status: 429 });
+  }
+
   let config: Partial<TenantConfig>;
 
   try {

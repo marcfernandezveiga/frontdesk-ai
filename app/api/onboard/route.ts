@@ -10,8 +10,19 @@ import { NextRequest } from "next/server";
 import type { TenantConfig } from "@/lib/tenant";
 import { DEFAULT_THEME, DEFAULT_SCHEDULE } from "@/lib/tenant";
 import { extractBrand } from "@/lib/extract";
+import { checkRateLimit, getClientIp } from "@/lib/rate-limit";
 
 export async function POST(request: NextRequest) {
+  const ip = getClientIp(request);
+  const { allowed, reason } = await checkRateLimit(
+    "/api/onboard",
+    ip,
+    { perIpPerHour: 6, perDayGlobal: 120 }
+  );
+  if (!allowed) {
+    return Response.json({ error: reason }, { status: 429 });
+  }
+
   let url = "";
   let description = "";
 

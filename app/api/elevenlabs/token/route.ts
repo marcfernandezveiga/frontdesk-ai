@@ -11,7 +11,20 @@
  * Response: { conversation_token: string }
  * The client passes this as `conversationToken` to startSession().
  */
-export async function GET() {
+import { NextRequest } from "next/server";
+import { checkRateLimit, getClientIp } from "@/lib/rate-limit";
+
+export async function GET(request: NextRequest) {
+  const ip = getClientIp(request);
+  const { allowed, reason } = await checkRateLimit(
+    "/api/elevenlabs/token",
+    ip,
+    { perIpPerHour: 12, perDayGlobal: 250 }
+  );
+  if (!allowed) {
+    return Response.json({ error: reason }, { status: 429 });
+  }
+
   const apiKey = process.env.ELEVENLABS_API_KEY;
   const agentId = process.env.NEXT_PUBLIC_ELEVENLABS_AGENT_ID;
 
